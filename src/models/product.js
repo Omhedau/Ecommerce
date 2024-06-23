@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+// product.model.js
+
+import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
     title: {
@@ -33,15 +35,15 @@ const productSchema = new mongoose.Schema({
     }],
     ratings: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ratings',
+        ref: 'Rating', 
     }],
     reviews: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'reviews',
+        ref: 'Review', 
     }],
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'categories',
+        ref: 'Category', 
     },
     gender: {
         type: String,

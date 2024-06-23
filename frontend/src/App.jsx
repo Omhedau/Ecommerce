@@ -8,6 +8,7 @@ import Checkout from './pages/Checkout'
 import ProductDetail from './pages/ProductDetail'
 import RelatedProducts from './components/RelatedProducts'
 import Shop from './pages/Shop'
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,12 +16,14 @@ function App() {
   return (
     <>
      <Navbar/> 
+     <Routes>
+       <Route path="/" element={<Home />} />
+       <Route path="/shop" element={<Shop/>} />
+       <Route path="/product/:id" element={<ProductDetail/>} />
+       <Route path="/cart" element={<Cart/>} />
+       <Route path="/checkout" element={<Checkout/>} />
+     </Routes>
      <div className=''>
-     {/* <Home/> */}
-     {/* <Cart/> */}
-     {/* <Checkout/> */}
-     <ProductDetail/>
-     <Shop/>
      <Instagram/>
      <Footer/>
      </div>

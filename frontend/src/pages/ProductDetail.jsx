@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   FaStar,
   FaHeart,
@@ -7,22 +8,32 @@ import {
   FaArrowLeft,
   FaArrowRight,
   FaMinus,
-  FaPlus
+  FaPlus,
 } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import ProductDetailsTab from "../components/ProductDetailsTab";
 import RelatedProducts from "../components/RelatedProducts";
+import { useParams } from "react-router-dom";
 
 const ProductDetails = () => {
-  const images = [
-    "../../src/assets/img/product/details/product-1.jpg",
-    "../../src/assets/img/product/details/product-2.jpg",
-    "../../src/assets/img/product/details/product-3.jpg",
-    "../../src/assets/img/product/details/product-4.jpg",
-  ];
-
+  const [product, setProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const param = useParams();
+  const { id } = param;
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5454/product/${id}`);
+        setProduct(response.data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleThumbnailClick = (index) => {
     setCurrentImageIndex(index);
@@ -30,13 +41,13 @@ const ProductDetails = () => {
 
   const handlePrevClick = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? product.imageUrl.length - 1 : prevIndex - 1
     );
   };
 
   const handleNextClick = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === product.imageUrl.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -44,15 +55,24 @@ const ProductDetails = () => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
   };
 
+  if (!product) {
+    return <div>Loading...</div>; // Placeholder for loading state
+  }
+
   return (
-    <div className="flex flex-wrap py-20 px-40 mx-auto ">
+    <div className="flex flex-wrap py-20 px-40 mx-auto">
       {/* Product Images Section */}
       <div className="w-full lg:w-1/2 mb-8 lg:mb-0 flex">
         <div className="flex flex-col space-y-2 mr-4">
-          {images.map((image, index) => (
+          {product.imageUrl.map((image, index) => (
             <img
               key={index}
-              src={image}
+              src={`data:${image.contentType};base64,${btoa(
+                new Uint8Array(image.data.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ""
+                )
+              )}`}
               alt={`Product Thumbnail ${index + 1}`}
               className={`cursor-pointer border ${
                 index === currentImageIndex
@@ -66,7 +86,13 @@ const ProductDetails = () => {
         </div>
         <div className="relative w-full">
           <img
-            src={images[currentImageIndex]}
+            src={`data:${
+              product.imageUrl[currentImageIndex].contentType
+            };base64,${btoa(
+              new Uint8Array(
+                product.imageUrl[currentImageIndex].data.data
+              ).reduce((data, byte) => data + String.fromCharCode(byte), "")
+            )}`}
             alt={`Product Image ${currentImageIndex + 1}`}
             className="rounded carousel-image"
             style={{
@@ -94,36 +120,38 @@ const ProductDetails = () => {
       {/* Product Details Section */}
       <div className="w-full lg:w-1/2 lg:pl-10">
         <h3 className="text-2xl font-semibold uppercase mb-2">
-          Essential Structured Blazer
+          {product.title}
         </h3>
-        <span className="block text-sm font-normal mb-3">Brand: SKMEI</span>
+        <span className="block text-sm font-normal mb-3">
+          Brand: {product.brand}
+        </span>
         <div className="flex items-center mb-4">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(product.ratings.length)].map((_, i) => (
             <FaStar key={i} className="text-yellow-500 text-sm" />
           ))}
-          <span className="ml-2 text-sm text-gray-600">(138 reviews)</span>
+          <span className="ml-2 text-sm text-gray-600">
+            ({product.reviews.length} reviews)
+          </span>
         </div>
         <div className="text-3xl font-bold text-red-600 mb-10">
-          $75.0
-          <span className="text-lg text-gray-500 line-through ml-2">$83.0</span>
+          ${product.price}
+          <span className="text-lg text-gray-500 line-through ml-2">
+            ${product.discountedPrice}
+          </span>
         </div>
-        <p className="text-gray-700 mb-8">
-          Nemo enim ipsam voluptatem quia aspernatur aut odit aut loret fugit,
-          sed quia consequuntur magni lores eos qui ratione voluptatem sequi
-          nesciunt.
-        </p>
+        <p className="text-gray-700 mb-8">{product.description}</p>
 
         <div className="flex items-center mb-6">
           <span className="mr-4">Quantity:</span>
           <div className="flex items-center border border-gray-400 rounded-full p-2 px-2 mr-5">
-            <button 
+            <button
               className="text-gray-400 text-sm rounded-full w-8 h-8 flex items-center justify-center"
               onClick={() => handleQuantityChange(-1)}
             >
               <FaMinus />
             </button>
             <span className="mx-4 text-lg">{quantity}</span>
-            <button 
+            <button
               className="text-gray-400 rounded-full text-sm w-8 h-8 flex items-center justify-center"
               onClick={() => handleQuantityChange(1)}
             >
@@ -146,53 +174,35 @@ const ProductDetails = () => {
             </li>
           </ul>
         </div>
-        
-        <div className="flex items-center mb-6">
-          
-        </div>
 
         <div className="border-t border-gray-300 pt-6">
           <ul>
             <li className="flex items-center mb-4">
               <span className="w-1/3 font-semibold">Availability:</span>
-              <span className="">In Stock</span>
+              <span>In Stock</span>
             </li>
             <li className="flex items-center mb-4">
               <span className="w-1/3 font-semibold">Available color:</span>
               <div className="flex space-x-4">
-                <label className="flex items-center">
-                  <input type="radio" name="color" className="form-radio" />
-                  <span className="w-5 h-5 rounded-full bg-red-600 ml-2"></span>
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="color" className="form-radio" />
-                  <span className="w-5 h-5 rounded-full bg-black ml-2"></span>
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="color" className="form-radio" />
-                  <span className="w-5 h-5 rounded-full bg-gray-400 ml-2"></span>
-                </label>
+                <span
+                  className={`w-5 h-5 rounded-full border-black border ${
+                    product.color === "white"
+                      ? "bg-white"
+                      : product.color === "black"
+                      ? "bg-black"
+                      : `bg-${product.color}-600`
+                  }`}
+                ></span>
               </div>
             </li>
             <li className="flex items-center mb-4">
-              <span className="w-1/3 font-semibold">Available size:</span>
+              <span className="w-1/3 font-semibold">Available sizes:</span>
               <div className="flex space-x-4">
-                <label className="flex items-center">
-                  <input type="radio" name="size" className="form-radio" />
-                  <span className="ml-2">XS</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="size" className="form-radio" />
-                  <span className="ml-2">S</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="size" className="form-radio" />
-                  <span className="ml-2">M</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="size" className="form-radio" />
-                  <span className="ml-2">L</span>
-                </label>
+                {product.sizes.map((size, index) => (
+                  <span key={index} className="ml-2">
+                    {size.name}
+                  </span>
+                ))}
               </div>
             </li>
             <li className="flex items-center">
@@ -202,8 +212,8 @@ const ProductDetails = () => {
           </ul>
         </div>
       </div>
-      <ProductDetailsTab/>
-      <RelatedProducts/>
+      <ProductDetailsTab />
+      {/* <RelatedProducts /> */}
     </div>
   );
 };
