@@ -33,10 +33,10 @@ const productSchema = new mongoose.Schema({
         data: Buffer, 
         contentType: String, 
     }],
-    ratings: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Rating', 
-    }],
+    ratings: {
+        type: Number,
+        default: 0,
+      },
     reviews: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Review', 
@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['All','Men', 'Women', 'Unisex', 'Kids / boy','Kids / girl'],
+        enum: ['Men', 'Women', 'boy', 'girl'],
     },
     createdAt: {
         type: Date,

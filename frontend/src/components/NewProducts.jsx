@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaExpand, FaHeart, FaShoppingBag, FaStar } from 'react-icons/fa';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 // const products = [
 //   {
@@ -105,6 +106,7 @@ export const ProductItem = ({ product }) => {
   };
 
   return (
+    <Link key={product._id} to={`/product/id/${product._id}`}>
     <div className="w-[300px] p-4">
       <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="relative h-72">
@@ -140,6 +142,7 @@ export const ProductItem = ({ product }) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

@@ -10,7 +10,8 @@ const upload = multer({ storage: storage });
 
 // Define routes
 router.get('/', productController.getAllProducts);
-router.get('/:id',productController.getProductById);
+router.get('/:gender', productController.getProductByGender);
+router.get('/id/:id', productController.getProductById); // Corrected this line
 router.post('/', upload.array('images'), productController.addProduct);
 
 export default router;

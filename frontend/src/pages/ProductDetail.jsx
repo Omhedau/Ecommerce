@@ -25,7 +25,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5454/product/${id}`);
+        const response = await axios.get(`http://localhost:5454/product/id/${id}`);
         setProduct(response.data);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -126,7 +126,7 @@ const ProductDetails = () => {
           Brand: {product.brand}
         </span>
         <div className="flex items-center mb-4">
-          {[...Array(product.ratings.length)].map((_, i) => (
+          {[...Array(product.ratings)].map((_, i) => (
             <FaStar key={i} className="text-yellow-500 text-sm" />
           ))}
           <span className="ml-2 text-sm text-gray-600">

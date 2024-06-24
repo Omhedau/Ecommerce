@@ -5,6 +5,7 @@ import Pagination from '../components/Pagination';
 import Dropdown from '../components/Dropdown';
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -12,6 +13,8 @@ const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState('Low To High');
   const [products, setProducts] = useState(null); // Initialize as null or undefined
+  const param = useParams();
+  const { gender } = param;
 
   useEffect(() => {
     fetchProducts();
@@ -19,8 +22,11 @@ const Shop = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5454/product');
-      setProducts(response.data);
+      const response = await axios.get(`http://localhost:5454/product/${gender}`);
+      const { products, brandData, categoryData } = response.data;
+      console.log(brandData);
+      console.log(categoryData);
+      setProducts(products);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -63,9 +69,7 @@ const Shop = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {selectedProducts.map((product) => (
-              <Link key={product._id} to={`/product/${product._id}`}>
                 <ProductItem product={product} />
-              </Link>
             ))}
           </div>
           <Pagination

@@ -9,16 +9,16 @@ const Sidebar = () => {
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedGender, setSelectedGender] = useState("All");
+ // const [selectedGender, setSelectedGender] = useState("All");
   const [selectedBrands, setSelectedBrands] = useState([]);
 
-  const genderOptions = [
-    { value: "All", label: "All" },
-    { value: "Men", label: "Men" },
-    { value: "Women", label: "Women" },
-    { value: "Kids / boy", label: "Kids / boy" },
-    { value: "Kids / girl", label: "Kids / girl" },
-  ];
+  // const genderOptions = [
+  //   { value: "All", label: "All" },
+  //   { value: "Men", label: "Men" },
+  //   { value: "Women", label: "Women" },
+  //   { value: "Kids / boy", label: "Kids / boy" },
+  //   { value: "Kids / girl", label: "Kids / girl" },
+  // ];
 
   const categoriesData = {
     topwear: ["Coats", "Jackets", "Shirts", "T-shirts", "Sweaters"],
@@ -26,7 +26,7 @@ const Sidebar = () => {
     footwear: ["Sneakers", "Boots", "Sandals", "Flats", "Heels"],
   };
 
-  const brandsData = ["Nike", "Adidas", "Puma", "Reebok"]; // Separate array for brands
+  const brandsData = ["Nike", "Adidas", "Puma", "Reebok"]; 
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
@@ -78,9 +78,9 @@ const Sidebar = () => {
 
   const categoryKeys = Object.keys(categoriesData);
 
-  const handleGenderChange = (value) => {
-    setSelectedGender(value); // Update selected gender state
-  };
+  // const handleGenderChange = (value) => {
+  //   setSelectedGender(value); // Update selected gender state
+  // };
 
   const handleCategorySelect = (category, subcategory) => {
     if (category !== selectedCategory) {
@@ -196,7 +196,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-        <div className="sidebar__gender mb-10">
+        {/* <div className="sidebar__gender mb-10">
           <div className="section-title mb-9">
             <h4 className="text-lg font-medium">Gender</h4>
           </div>
@@ -215,7 +215,7 @@ const Sidebar = () => {
               </label>
             ))}
           </div>
-        </div>
+        </div> */}
         <div className="sidebar__brands mb-10">
           <div className="section-title mb-9">
             <h4 className="text-lg font-medium">Brands</h4>
