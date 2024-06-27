@@ -30,8 +30,8 @@ const productSchema = new mongoose.Schema({
         quantity: { type: Number },
     }],
     imageUrl: [{
-        data: Buffer, 
-        contentType: String, 
+        url: { type: String }, 
+        public_id: { type: String }, 
     }],
     ratings: {
         type: Number,
@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['Men', 'Women', 'boy', 'girl'],
+        enum: ['Men', 'Women', 'Boy', 'Girl'],
     },
     createdAt: {
         type: Date,

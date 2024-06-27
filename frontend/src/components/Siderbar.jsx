@@ -1,38 +1,69 @@
-import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 import { Range, getTrackBackground } from "react-range";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-  const [activeAccordion, setActiveAccordion] = useState(null);
   const [values, setValues] = useState([0, 99]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
- // const [selectedGender, setSelectedGender] = useState("All");
   const [selectedBrands, setSelectedBrands] = useState([]);
 
-  // const genderOptions = [
-  //   { value: "All", label: "All" },
-  //   { value: "Men", label: "Men" },
-  //   { value: "Women", label: "Women" },
-  //   { value: "Kids / boy", label: "Kids / boy" },
-  //   { value: "Kids / girl", label: "Kids / girl" },
-  // ];
+  const brandsData = ["Nike", "Adidas", "H&M", "ZARA", "Uniqlo", "Levi's", "Gucci"];
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const categoriesData = {
-    topwear: ["Coats", "Jackets", "Shirts", "T-shirts", "Sweaters"],
-    bottomwear: ["Pants", "Shorts", "Skirts", "Jeans", "Leggings"],
-    footwear: ["Sneakers", "Boots", "Sandals", "Flats", "Heels"],
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const brands = params.get("brands") ? params.get("brands").split(',') : [];
+    const sizes = params.get("sizes") ? params.get("sizes").split(',') : [];
+    const colors = params.get("colors") ? params.get("colors").split(',') : [];
+    const minPrice = params.get("minPrice") ? Number(params.get("minPrice")) : 0;
+    const maxPrice = params.get("maxPrice") ? Number(params.get("maxPrice")) : 99;
+
+    setSelectedBrands(brands);
+    setSelectedSizes(sizes);
+    setSelectedColors(colors);
+    setValues([minPrice, maxPrice]);
+  }, [location.search]);
+
+  const handleFilter = (sectionId, value) => {
+    const searchParams = new URLSearchParams(location.search);
+    let filterValues = searchParams.get(sectionId) ? searchParams.get(sectionId).split(',') : [];
+
+    if (filterValues.includes(value)) {
+      filterValues = filterValues.filter(item => item !== value);
+      if (filterValues.length === 0) {
+        searchParams.delete(sectionId);
+      }
+    } else {
+      filterValues.push(value);
+    }
+
+    if (filterValues.length) {
+      searchParams.set(sectionId, filterValues.join(','));
+    }
+
+    navigate({ search: searchParams.toString() });
   };
 
-  const brandsData = ["Nike", "Adidas", "Puma", "Reebok"]; 
+  const handleApplyFilters = () => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("minPrice", values[0]);
+    searchParams.set("maxPrice", values[1]);
+    navigate({ search: searchParams.toString() });
+  };
 
-  const toggleAccordion = (index) => {
-    setActiveAccordion(activeAccordion === index ? null : index);
+  const handleBrandChange = (brand) => {
+    handleFilter('brands', brand);
+    setSelectedBrands((prevSelectedBrands) =>
+      prevSelectedBrands.includes(brand)
+        ? prevSelectedBrands.filter((b) => b !== brand)
+        : [...prevSelectedBrands, brand]
+    );
   };
 
   const handleSizeChange = (size) => {
+    handleFilter('sizes', size);
     setSelectedSizes((prevSelectedSizes) =>
       prevSelectedSizes.includes(size)
         ? prevSelectedSizes.filter((s) => s !== size)
@@ -41,6 +72,7 @@ const Sidebar = () => {
   };
 
   const handleColorChange = (color) => {
+    handleFilter('colors', color);
     setSelectedColors((prevSelectedColors) =>
       prevSelectedColors.includes(color)
         ? prevSelectedColors.filter((c) => c !== color)
@@ -48,174 +80,25 @@ const Sidebar = () => {
     );
   };
 
-  const handleBrandChange = (brand) => {
-    setSelectedBrands((prevSelectedBrands) =>
-      prevSelectedBrands.includes(brand)
-        ? prevSelectedBrands.filter((b) => b !== brand)
-        : [...prevSelectedBrands, brand]
-    );
-  };
-
   const resetFilters = () => {
-    setValues([33, 66]);
+    setValues([0, 99]);
     setSelectedSizes([]);
     setSelectedColors([]);
-    setSelectedGender("All");
     setSelectedBrands([]);
-    setSelectedSubcategories([]);
+    navigate({ search: "" });
   };
 
   const colorOptions = [
-    { name: "Blacks", color: "black" },
-    { name: "Whites", color: "white" },
-    { name: "Reds", color: "red" },
-    { name: "Greys", color: "gray" },
-    { name: "Blues", color: "blue" },
-    { name: "Beige Tones", color: "beige" },
-    { name: "Greens", color: "green" },
-    { name: "Yellows", color: "yellow" },
+    "black" ,  "white" ,  "red" , "gray" ,  "blue" ,  "beige" , "green" ,"yellow" 
   ];
 
-  const categoryKeys = Object.keys(categoriesData);
-
-  // const handleGenderChange = (value) => {
-  //   setSelectedGender(value); // Update selected gender state
-  // };
-
-  const handleCategorySelect = (category, subcategory) => {
-    if (category !== selectedCategory) {
-      setSelectedSubcategories([]);
-    }
-  
-    const updateSubcategories = (prevSelectedSubcategories) => {
-
-        if(category !== selectedCategory){
-            return [subcategory];
-        }
-
-      if (prevSelectedSubcategories.includes(subcategory)) {
-        return prevSelectedSubcategories.filter((s) => s !== subcategory);
-      } else {
-        return [...prevSelectedSubcategories, subcategory];
-      }
-    };
-  
-    // Determine the updated subcategories
-    const updatedSubcategories = updateSubcategories(selectedSubcategories);
-    
-    // Update selectedCategory based on the subcategories
-    if (updatedSubcategories.length === 0) {
-      setSelectedCategory("All");
-    } else if (category !== selectedCategory) {
-      setSelectedCategory(category);
-    }
-
-    console.log(selectedCategory);
-    console.log(selectedSubcategories);
-    setSelectedSubcategories(updatedSubcategories);
-  };
-  
-
   const getSizeOptions = () => {
-    switch (selectedCategory) {
-      case "topwear":
-        return ["xxs", "xs", "s", "m", "l", "xl"];
-      case "bottomwear":
-        return ["25", "26", "27", "28", "29"];
-      case "footwear":
-        return ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"];
-      case "All": 
-      default:
-        return [];
-    }
+    return ["s", "m", "l", "xl", "25", "26", "27", "28", "29", "36", "37", "38", "39"];
   };
 
   return (
     <div className="w-full lg:w-1/4 md:w-1/3 mb-8">
       <div className="shop__sidebar p-4 rounded-lg">
-        <div className="sidebar__categories mb-12">
-          <div className="section-title mb-9">
-            <h4 className="text-lg font-medium">Categories</h4>
-          </div>
-          <div className="categories__accordion">
-            <div id="accordionExample">
-              {categoryKeys.map((key, index) => (
-                <div
-                  key={index}
-                  className="card mb-3 pb-3 border-b border-gray-200"
-                >
-                  <div
-                    className={`card-heading flex justify-between items-center cursor-pointer ${
-                      activeAccordion === index ? "active" : ""
-                    }`}
-                    onClick={() => toggleAccordion(index)}
-                  >
-                    <span className="text-base font-medium text-gray-800">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </span>
-                    {activeAccordion === index ? (
-                      <FaChevronUp />
-                    ) : (
-                      <FaChevronDown />
-                    )}
-                  </div>
-                  {activeAccordion === index && (
-                    <div className="card-body pl-4 pt-2">
-                      <ul>
-                        {categoriesData[key].map((subcategory, i) => (
-                          <li
-                            key={i}
-                            className={`relative pl-4 mb-2 ${
-                              selectedCategory === key &&
-                              (subcategory === selectedCategory ||
-                                selectedSubcategories.includes(subcategory))
-                                ? "text-red-600"
-                                : "text-gray-600"
-                            }`}
-                          >
-                            <span
-                              className="text-sm leading-7"
-                              onClick={() =>
-                                handleCategorySelect(
-                                  key,
-                                  subcategory === "All" ? key : subcategory
-                                )
-                              }
-                              style={{ cursor: "pointer" }}
-                            >
-                              {subcategory}
-                            </span>
-                            <span className="absolute left-1 top-3 w-1 h-1 bg-gray-600"></span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        {/* <div className="sidebar__gender mb-10">
-          <div className="section-title mb-9">
-            <h4 className="text-lg font-medium">Gender</h4>
-          </div>
-          <div className="flex flex-wrap items-center gap-4">
-            {genderOptions.map((option, index) => (
-              <label key={index} className="inline-flex items-center">
-                <input
-                  type="radio"
-                  className="form-radio"
-                  name="gender"
-                  value={option.value}
-                  checked={selectedGender === option.value}
-                  onChange={() => handleGenderChange(option.value)}
-                />
-                <span className="ml-2">{option.label}</span>
-              </label>
-            ))}
-          </div>
-        </div> */}
         <div className="sidebar__brands mb-10">
           <div className="section-title mb-9">
             <h4 className="text-lg font-medium">Brands</h4>
@@ -244,7 +127,7 @@ const Sidebar = () => {
               step={1}
               min={0}
               max={99}
-              onChange={(values) => setValues(values)}
+              onChange={(newValues) => setValues(newValues)}
               renderTrack={({ props, children }) => (
                 <div
                   {...props}
@@ -269,7 +152,7 @@ const Sidebar = () => {
             />
           </div>
           <div className="relative mb-7">
-          <p className="inline-block text-base text-gray-800 font-medium">
+            <p className="inline-block text-base text-gray-800 font-medium">
               Price:{" "}
             </p>
             <span className="inline-block text-base text-gray-800 mx-2">
@@ -280,56 +163,55 @@ const Sidebar = () => {
               ${values[1]}
             </span>
           </div>
-          <a
-            href="#"
+          <button
             className="text-sm text-gray-800 uppercase tracking-wide font-bold inline-block py-1 px-6 border-2 border-red-600 rounded-sm absolute right-0 bottom-0"
+            onClick={handleApplyFilters}
           >
             Filter
-          </a>
-        </div>{
-            selectedCategory !== "All" && <div className="sidebar__sizes mb-10">
-            <div className="section-title mb-9">
-              <h4 className="text-lg font-medium">Shop by size</h4>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {getSizeOptions().map((size, i) => (
-                <label key={i} className="block">
-                  <input
-                    type="checkbox"
-                    className="hidden"
-                    checked={selectedSizes.includes(size)}
-                    onChange={() => handleSizeChange(size)}
-                  />
-                  <span
-                    className={`inline-block text-sm uppercase cursor-pointer px-4 py-2 border rounded-md ${
-                      selectedSizes.includes(size)
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-700"
-                    }`}
-                  >
-                    {size}
-                  </span>
-                </label>
-              ))}
-            </div>
+          </button>
+        </div>
+        <div className="sidebar__sizes mb-10">
+          <div className="section-title mb-9">
+            <h4 className="text-lg font-medium">Shop by size</h4>
           </div>
-        }
+          <div className="flex flex-wrap gap-2">
+            {getSizeOptions().map((size, i) => (
+              <label key={i} className="block">
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  checked={selectedSizes.includes(size)}
+                  onChange={() => handleSizeChange(size)}
+                />
+                <span
+                  className={`inline-block text-sm uppercase cursor-pointer px-4 py-2 border rounded-md ${
+                    selectedSizes.includes(size)
+                      ? "bg-gray-700 text-white"
+                      : "bg-white text-gray-700"
+                  }`}
+                >
+                  {size}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
         <div className="sidebar__color">
           <div className="section-title mb-9">
             <h4 className="text-lg font-medium">Shop by color</h4>
           </div>
           <div className="grid grid-cols-5 gap-2">
-            {colorOptions.map(({ name, color }, i) => (
+            {colorOptions.map((color, i) => (
               <label key={i} className="block">
                 <input
                   type="checkbox"
                   className="hidden"
-                  checked={selectedColors.includes(name)}
-                  onChange={() => handleColorChange(name)}
+                  checked={selectedColors.includes(color)}
+                  onChange={() => handleColorChange(color)}
                 />
                 <span
                   className={`inline-block w-8 h-8 rounded-full cursor-pointer border-2 ${
-                    selectedColors.includes(name)
+                    selectedColors.includes(color)
                       ? "border-gray-700"
                       : "border-transparent"
                   }`}

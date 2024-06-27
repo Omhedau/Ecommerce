@@ -92,14 +92,7 @@ export const ProductItem = ({ product }) => {
   const renderImage = () => {
     if (product.imageUrl && product.imageUrl.length > 0) {
       const imageData = product.imageUrl[0];
-      const base64Image = `data:${imageData.contentType};base64,${btoa(
-        new Uint8Array(imageData.data.data).reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          ''
-        )
-      )}`;
-
-      return <img src={base64Image} className="w-full h-72 object-cover" alt={product.title} />;
+      return <img src={imageData.url} className="w-full h-72 object-cover" alt={product.title} />;
     } else {
       return <div className="w-full h-72 bg-gray-200"></div>;
     }
@@ -107,41 +100,41 @@ export const ProductItem = ({ product }) => {
 
   return (
     <Link key={product._id} to={`/product/id/${product._id}`}>
-    <div className="w-[300px] p-4">
-      <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="relative h-72">
-          {renderImage()}
-          {product.label && (
-            <div className={`absolute top-2 left-2 text-xs font-semibold text-white px-2 py-1 rounded ${product.labelColor}`}>
-              {product.label}
-            </div>
-          )}
-          <ul className="absolute bottom-4 w-full flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition duration-300">
-            <li className="flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-red-600 transition duration-300">
-              <a href={product.imageUrl[0].data} className="text-gray-800 hover:text-white"><FaExpand /></a>
-            </li>
-            <li className="flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-red-600 transition duration-300">
-              <a href="#" className="text-gray-800 hover:text-white"><FaHeart /></a>
-            </li>
-            <li className="flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-red-600 transition duration-300">
-              <a href="#" className="text-gray-800 hover:text-white"><FaShoppingBag /></a>
-            </li>
-          </ul>
-        </div>
-        <div className="p-4 text-center">
-          <h6 className="text-lg font-semibold mb-2"><a href="#">{product.title}</a></h6>
-          <div className="flex justify-center mb-2">
-            {[...Array(product.rating)].map((_, index) => (
-              <FaStar key={index} className="text-yellow-500 text-xs" />
-            ))}
+      <div className="w-[300px] p-4">
+        <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="relative h-72">
+            {renderImage()}
+            {product.label && (
+              <div className={`absolute top-2 left-2 text-xs font-semibold text-white px-2 py-1 rounded ${product.labelColor}`}>
+                {product.label}
+              </div>
+            )}
+            <ul className="absolute bottom-4 w-full flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition duration-300">
+              <li className="flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-red-600 transition duration-300">
+                <a href={product.imageUrl[0].url} className="text-gray-800 hover:text-white"><FaExpand /></a>
+              </li>
+              <li className="flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-red-600 transition duration-300">
+                <a href="#" className="text-gray-800 hover:text-white"><FaHeart /></a>
+              </li>
+              <li className="flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-red-600 transition duration-300">
+                <a href="#" className="text-gray-800 hover:text-white"><FaShoppingBag /></a>
+              </li>
+            </ul>
           </div>
-          <div className="text-xl font-semibold text-gray-800">
-            {product.price}
-            {product.originalPrice && <span className="text-sm text-gray-500 line-through ml-2">{product.originalPrice}</span>}
+          <div className="p-4 text-center">
+            <h6 className="text-lg font-semibold mb-2">{product.title}</h6>
+            <div className="flex justify-center mb-2">
+              {[...Array(product.rating)].map((_, index) => (
+                <FaStar key={index} className="text-yellow-500 text-xs" />
+              ))}
+            </div>
+            <div className="text-xl font-semibold text-gray-800">
+              {product.price}
+              {product.originalPrice && <span className="text-sm text-gray-500 line-through ml-2">{product.originalPrice}</span>}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </Link>
   );
 };
@@ -161,9 +154,9 @@ const NewProducts = () => {
       const response = await axios.get('http://localhost:5454/product');
       const fetchedProducts = response.data;
       setAllProducts(fetchedProducts);
-      setClothingProducts(fetchedProducts.filter(product => product.category.name === 'Clothing'));
-      setAccessoriesProducts(fetchedProducts.filter(product => product.category.name === 'Accessories'));
-      setCosmeticProducts(fetchedProducts.filter(product => product.category.name === 'Cosmetics'));
+      setClothingProducts(fetchedProducts.filter(product => product.category === 'Clothing'));
+      setAccessoriesProducts(fetchedProducts.filter(product => product.category === 'Accessories'));
+      setCosmeticProducts(fetchedProducts.filter(product => product.category === 'Cosmetics'));
     } catch (error) {
       console.error('Error fetching products:', error);
       setError('Failed to fetch products. Please try again later.');
@@ -175,7 +168,6 @@ const NewProducts = () => {
   }, []);
 
   useEffect(() => {
-    console.log("calling me....");
     switch (selectedCategory) {
       case 'All':
         setFilteredProducts(allProducts);
@@ -224,7 +216,7 @@ const NewProducts = () => {
         <div className="flex flex-wrap -mx-4">
           {filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
-              <ProductItem key={product.id} product={product} />
+              <ProductItem key={product._id} product={product} />
             ))
           ) : (
             <div className="text-center w-full" key="no-products">

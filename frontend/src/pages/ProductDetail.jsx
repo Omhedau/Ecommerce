@@ -12,15 +12,13 @@ import {
 } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import ProductDetailsTab from "../components/ProductDetailsTab";
-import RelatedProducts from "../components/RelatedProducts";
 import { useParams } from "react-router-dom";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const param = useParams();
-  const { id } = param;
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -67,12 +65,7 @@ const ProductDetails = () => {
           {product.imageUrl.map((image, index) => (
             <img
               key={index}
-              src={`data:${image.contentType};base64,${btoa(
-                new Uint8Array(image.data.data).reduce(
-                  (data, byte) => data + String.fromCharCode(byte),
-                  ""
-                )
-              )}`}
+              src={image.url}
               alt={`Product Thumbnail ${index + 1}`}
               className={`cursor-pointer border ${
                 index === currentImageIndex
@@ -86,13 +79,7 @@ const ProductDetails = () => {
         </div>
         <div className="relative w-full">
           <img
-            src={`data:${
-              product.imageUrl[currentImageIndex].contentType
-            };base64,${btoa(
-              new Uint8Array(
-                product.imageUrl[currentImageIndex].data.data
-              ).reduce((data, byte) => data + String.fromCharCode(byte), "")
-            )}`}
+            src={product.imageUrl[currentImageIndex].url}
             alt={`Product Image ${currentImageIndex + 1}`}
             className="rounded carousel-image"
             style={{
@@ -134,10 +121,12 @@ const ProductDetails = () => {
           </span>
         </div>
         <div className="text-3xl font-bold text-red-600 mb-10">
-          ${product.price}
-          <span className="text-lg text-gray-500 line-through ml-2">
-            ${product.discountedPrice}
-          </span>
+          ${product.discountedPrice}
+          {product.price && (
+            <span className="text-lg text-gray-500 line-through ml-2">
+              ${product.price}
+            </span>
+          )}
         </div>
         <p className="text-gray-700 mb-8">{product.description}</p>
 
@@ -185,13 +174,8 @@ const ProductDetails = () => {
               <span className="w-1/3 font-semibold">Available color:</span>
               <div className="flex space-x-4">
                 <span
-                  className={`w-5 h-5 rounded-full border-black border ${
-                    product.color === "white"
-                      ? "bg-white"
-                      : product.color === "black"
-                      ? "bg-black"
-                      : `bg-${product.color}-600`
-                  }`}
+                  className={`w-5 h-5 rounded-full border-black border`}
+                  style={{ backgroundColor: product.color }}
                 ></span>
               </div>
             </li>
@@ -213,7 +197,6 @@ const ProductDetails = () => {
         </div>
       </div>
       <ProductDetailsTab />
-      {/* <RelatedProducts /> */}
     </div>
   );
 };
