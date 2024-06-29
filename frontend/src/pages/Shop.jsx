@@ -3,7 +3,8 @@ import Sidebar from '../components/Siderbar';
 import { ProductItem } from '../components/NewProducts'; 
 import Pagination from '../components/Pagination';
 import Dropdown from '../components/Dropdown';
-import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllProducts } from '../redux/actions/product';
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 9;
@@ -11,11 +12,12 @@ const ITEMS_PER_PAGE = 9;
 const Shop = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [sortOption, setSortOption] = useState('Newest');
-    const [products, setProducts] = useState([]);
-    const [totalPages, setTotalPages] = useState(1);
     const { gender, toplevelCat, category } = useParams();
+    const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+
+    const { products, totalPages, loading } = useSelector(state => state.products);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -39,15 +41,10 @@ const Shop = () => {
             const sizes = searchParams.get("sizes");
             const colors = searchParams.get("colors");
 
-            const response = await axios.get(`http://localhost:5454/product/${gender}/${toplevelCat}/${category}`, {
-                params: { page, sort, minPrice, maxPrice, brands, sizes, colors, limit: ITEMS_PER_PAGE }
-            });
-            const fetchedProducts = response.data.products;
-            const totalProducts = response.data.totalProducts;
-            const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
+            const options = { page, sort, minPrice, maxPrice, brands, sizes, colors, limit: ITEMS_PER_PAGE };
 
-            setProducts(fetchedProducts);
-            setTotalPages(totalPages);
+            dispatch(getAllProducts(gender,toplevelCat,category,options));
+
         } catch (error) {
             console.error('Error fetching products:', error);
         }

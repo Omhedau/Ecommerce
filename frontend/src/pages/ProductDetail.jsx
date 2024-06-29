@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  FaStar,
-  FaHeart,
-  FaAdjust,
-  FaShoppingBag,
-  FaArrowLeft,
-  FaArrowRight,
-  FaMinus,
-  FaPlus,
-} from "react-icons/fa";
+import { FaStar, FaHeart, FaAdjust, FaShoppingBag, FaArrowLeft, FaArrowRight, FaMinus, FaPlus } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import ProductDetailsTab from "../components/ProductDetailsTab";
 import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { getProductById } from "../redux/actions/product";
 
 const ProductDetails = () => {
-  const [product, setProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [availableQuantity, setAvailableQuantity] = useState(0);
   const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const { loading, product } = useSelector(state => state.products); 
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5454/product/id/${id}`);
-        setProduct(response.data);
+        dispatch(getProductById(id));
       } catch (error) {
         console.error("Error fetching product:", error);
       }
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (product && product.sizes.length > 0) {
+      setSelectedSize(product.sizes[0]);
+      setAvailableQuantity(product.sizes[0].quantity);
+    }
+  }, [product]);
 
   const handleThumbnailClick = (index) => {
     setCurrentImageIndex(index);
@@ -50,10 +52,16 @@ const ProductDetails = () => {
   };
 
   const handleQuantityChange = (amount) => {
-    setQuantity((prevQuantity) => Math.max(1, prevQuantity + amount));
+    setQuantity((prevQuantity) => Math.max(1, Math.min(availableQuantity, prevQuantity + amount)));
   };
 
-  if (!product) {
+  const handleSizeChange = (size) => {
+    setSelectedSize(size);
+    setAvailableQuantity(size.quantity);
+    setQuantity(1); // Reset quantity to 1 when size changes
+  };
+
+  if (loading || !product) {
     return <div>Loading...</div>; // Placeholder for loading state
   }
 
@@ -67,11 +75,7 @@ const ProductDetails = () => {
               key={index}
               src={image.url}
               alt={`Product Thumbnail ${index + 1}`}
-              className={`cursor-pointer border ${
-                index === currentImageIndex
-                  ? "border-red-600"
-                  : "border-gray-300"
-              } rounded`}
+              className={`cursor-pointer border ${index === currentImageIndex ? "border-red-600" : "border-gray-300"} rounded`}
               onClick={() => handleThumbnailClick(index)}
               style={{ width: "100px", height: "100px", objectFit: "cover" }}
             />
@@ -82,12 +86,7 @@ const ProductDetails = () => {
             src={product.imageUrl[currentImageIndex].url}
             alt={`Product Image ${currentImageIndex + 1}`}
             className="rounded carousel-image"
-            style={{
-              width: "100%",
-              maxHeight: "550px",
-              objectFit: "cover",
-              objectPosition: "top",
-            }}
+            style={{ width: "100%", maxHeight: "550px", objectFit: "cover", objectPosition: "top" }}
           />
           <button
             className="absolute top-1/2 transform -translate-y-1/2 left-5 bg-gray-300 rounded-full p-2"
@@ -150,18 +149,21 @@ const ProductDetails = () => {
           <button className="bg-red-600 text-white rounded-full px-8 py-3 flex items-center mr-4">
             <FaShoppingBag className="mr-2" /> Add to cart
           </button>
-          <ul className="flex space-x-4">
-            <li>
-              <button className="border border-gray-300 rounded-full p-3">
-                <FaHeart className="text-gray-600" />
+        </div>
+
+        <div className="mb-6 flex items-center">
+          <span className="mr-3">Select Size:</span>
+          <div className="flex items-center">
+            {product.sizes.map((size, index) => (
+              <button
+                key={index}
+                className={`px-4 py-2 border rounded-full mr-2 ${selectedSize === size ? "bg-red-600 text-white" : "bg-white"}`}
+                onClick={() => handleSizeChange(size)}
+              >
+                {size.name}
               </button>
-            </li>
-            <li>
-              <button className="border border-gray-300 rounded-full p-3">
-                <FaAdjust className="text-gray-600" />
-              </button>
-            </li>
-          </ul>
+            ))}
+          </div>
         </div>
 
         <div className="border-t border-gray-300 pt-6">

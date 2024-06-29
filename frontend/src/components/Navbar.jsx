@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -168,9 +167,11 @@ const Navbar = () => {
         </div>
         <div className="flex items-center space-x-4">
           <button  onClick={openModal} className="py-2 px-4 text-gray-700 font-semibold hover:bg-red-500 hover:text-white transition duration-300 rounded-md">Login</button>
+          <Link to={'/cart'}>
           <button className="py-2 px-4 text-gray-700 hover:bg-red-500 hover:text-white transition duration-300 rounded-md">
             <FaShoppingCart size={20} />
           </button>
+          </Link>
         </div>
       </div>
       <Login isOpen={modalIsOpen} closeModal={closeModal} />

@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema({
         unique: true, // Ensures each email is unique
     },
     avatar: {
-        data: Buffer, // For storing avatar image data as a Buffer
-        contentType: String, // Content type of the avatar image
+        url: { type: String }, 
+        public_id: { type: String }, 
     },
     role: {
         type: String,
@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
     mobile: {
         type: String,
     },
-    address: [{
+    address: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "addresses" // Reference to Address collection using ObjectId
-    }],
+        ref: "addresses" 
+    },
     createdAt: {
         type: Date,
         default: Date.now(), // Default value is the current timestamp

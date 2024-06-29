@@ -10,6 +10,7 @@ import RelatedProducts from './components/RelatedProducts'
 import Shop from './pages/Shop'
 import { Route, Routes } from "react-router-dom";
 
+
 function App() {
   const [count, setCount] = useState(0)
 
