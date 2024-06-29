@@ -3,7 +3,7 @@ import { Range, getTrackBackground } from "react-range";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-  const [values, setValues] = useState([0, 99]);
+  const [values, setValues] = useState([0, 10000]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -18,7 +18,7 @@ const Sidebar = () => {
     const sizes = params.get("sizes") ? params.get("sizes").split(',') : [];
     const colors = params.get("colors") ? params.get("colors").split(',') : [];
     const minPrice = params.get("minPrice") ? Number(params.get("minPrice")) : 0;
-    const maxPrice = params.get("maxPrice") ? Number(params.get("maxPrice")) : 99;
+    const maxPrice = params.get("maxPrice") ? Number(params.get("maxPrice")) : 10000;
 
     setSelectedBrands(brands);
     setSelectedSizes(sizes);
@@ -81,7 +81,7 @@ const Sidebar = () => {
   };
 
   const resetFilters = () => {
-    setValues([0, 99]);
+    setValues([0, 10000]);
     setSelectedSizes([]);
     setSelectedColors([]);
     setSelectedBrands([]);
@@ -93,7 +93,7 @@ const Sidebar = () => {
   ];
 
   const getSizeOptions = () => {
-    return ["s", "m", "l", "xl", "25", "26", "27", "28", "29", "36", "37", "38", "39"];
+    return ["S", "M", "L", "XL", "25", "26", "27", "28", "29", "36", "37", "38", "39"];
   };
 
   return (
@@ -126,7 +126,7 @@ const Sidebar = () => {
               values={values}
               step={1}
               min={0}
-              max={99}
+              max={10000}
               onChange={(newValues) => setValues(newValues)}
               renderTrack={({ props, children }) => (
                 <div
@@ -139,7 +139,7 @@ const Sidebar = () => {
                       values,
                       colors: ["#ccc", "#f00", "#ccc"],
                       min: 0,
-                      max: 99,
+                      max: 10000,
                     }),
                   }}
                 >

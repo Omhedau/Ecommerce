@@ -109,7 +109,6 @@ const categoryData = [
 
 const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState(null);
-  const [trianglePosition, setTrianglePosition] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => setModalIsOpen(true);
@@ -129,6 +128,9 @@ const Navbar = () => {
       <div className="container mx-auto px-20 py-6 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <img src="../../src/assets/Logo.png" alt="Logo" className="h-12 mr-32" />
+          <Link to={'/'} className='py-2 px-4 font-semibold'>
+            Home
+          </Link>
           {categoryData.map((category, index) => (
             <div
               key={category.gender}

@@ -4,40 +4,68 @@ import { ProductItem } from '../components/NewProducts';
 import Pagination from '../components/Pagination';
 import Dropdown from '../components/Dropdown';
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 9;
 
 const Shop = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [sortOption, setSortOption] = useState('Newest');
     const [products, setProducts] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
     const { gender, toplevelCat, category } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const page = searchParams.get("page");
+        const sort = searchParams.get("sort");
+
+        setCurrentPage(page ? Number(page) : 1);
+        setSortOption(sort || 'Newest');
+
         fetchProducts();
-    }, [gender,toplevelCat,category]);
+    }, [location.search, gender, toplevelCat, category]);
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`http://localhost:5454/product/${gender}/${toplevelCat}/${category}`);
-            const fetchedProducts = response.data;
+            const searchParams = new URLSearchParams(location.search);
+            const page = searchParams.get("page") || 1;
+            const sort = searchParams.get("sort") || 'Newest';
+            const minPrice = searchParams.get("minPrice");
+            const maxPrice = searchParams.get("maxPrice");
+            const brands = searchParams.get("brands");
+            const sizes = searchParams.get("sizes");
+            const colors = searchParams.get("colors");
+
+            const response = await axios.get(`http://localhost:5454/product/${gender}/${toplevelCat}/${category}`, {
+                params: { page, sort, minPrice, maxPrice, brands, sizes, colors, limit: ITEMS_PER_PAGE }
+            });
+            const fetchedProducts = response.data.products;
+            const totalProducts = response.data.totalProducts;
+            const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
+
             setProducts(fetchedProducts);
+            setTotalPages(totalPages);
         } catch (error) {
             console.error('Error fetching products:', error);
         }
     };
 
     const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set("page", pageNumber);
+        navigate({ search: searchParams.toString() });
     };
 
     const handleSortChange = (option) => {
-        // Handle sorting logic
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set("sort", option);
+        navigate({ search: searchParams.toString() });
     };
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const selectedProducts = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-    const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
     return (
         <>
@@ -53,12 +81,13 @@ const Shop = () => {
                         </div>
                         <Dropdown
                             label="Sort by "
-                            options={['Low To High', 'Newest', 'High Rated']}
+                            options={['Low To High', 'High To Low', 'Newest', 'High Rated']}
                             onSelect={handleSortChange}
+                            selected={sortOption}
                         />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {selectedProducts.map((product) => (
+                        {products.map((product) => (
                             <ProductItem key={product._id} product={product} />
                         ))}
                     </div>
