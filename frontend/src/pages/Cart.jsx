@@ -1,14 +1,27 @@
-import React from "react";
-import { FaStar, FaTimes, FaSyncAlt } from "react-icons/fa";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { FaStar, FaSyncAlt } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import { getUserCart, updateCartItem, deleteCartItem } from "../redux/actions/cart";
 
-const CartItem = ({ imgSrc, title, price, quantity, total }) => {
+const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
+
+  const handleQuantityChange = (quantity) => {
+    if (quantity < 1) return; // Prevent reducing quantity below 1
+    dispatch(updateCartItem(item._id, quantity));
+  };
+
+  const handleRemoveItemClick = () => {
+    dispatch(deleteCartItem(item._id));
+  };
+
   return (
     <tr className="border-b">
       <td className="flex items-center w-[3/7] py-8">
-        <img src={imgSrc} alt="" className=" w-24 h-24 mr-6" />
+        <img src={item.product.imageUrl[0].url} alt="" className="w-24 h-24 mr-6" />
         <div>
-          <h6 className="font-semibold">{title}</h6>
+          <h6 className="font-semibold">{item.product.title}</h6>
           <div className="flex text-yellow-500">
             {[...Array(5)].map((_, i) => (
               <FaStar key={i} className="text-xs" />
@@ -16,61 +29,37 @@ const CartItem = ({ imgSrc, title, price, quantity, total }) => {
           </div>
         </div>
       </td>
-      <td className="text-red-600 font-semibold w-1/7">{`$${price.toFixed(
-        1
-      )}`}</td>
+      <td className="text-red-600 font-semibold w-1/7">{`$${item.product.discountedPrice.toFixed(1)}`}</td>
       <td className="text-gray-600 font-semibold w-1/7">
         <div className="flex items-center">
-          <button className="text-gray-400 px-2 py-1">
+          <button className="text-gray-400 px-2 py-1" onClick={() => handleQuantityChange(item.quantity - 1)}>
             <span className="text-2xl">-</span>
           </button>
-          <div className="px-3 text-center mt-1">{quantity}</div>
-          <button className="text-gray-400 px-2 py-1">
+          <div className="px-3 text-center mt-1">{item.quantity}</div>
+          <button className="text-gray-400 px-2 py-1" onClick={() => handleQuantityChange(item.quantity + 1)}>
             <span className="text-xl">+</span>
           </button>
         </div>
       </td>
-      <td className="text-red-600 font-semibold w-1/7">{`$${total.toFixed(
-        1
-      )}`}</td>
+      <td className="text-red-600 font-semibold w-1/7">{`$${(item.quantity * item.product.discountedPrice).toFixed(1)}`}</td>
       <td className="">
-        <MdClose className="text-4xl font-bold cursor-pointer p-3 rounded-full bg-slate-200 text-gray-700" />
+        <MdClose className="text-4xl font-bold cursor-pointer p-3 rounded-full bg-slate-200 text-gray-700" onClick={handleRemoveItemClick} />
       </td>
     </tr>
   );
 };
 
 const Cart = () => {
-  const cartItems = [
-    {
-      imgSrc: "../../src/assets/img/shop-cart/cp-1.jpg",
-      title: "Chain bucket bag",
-      price: 150.0,
-      quantity: 1,
-      total: 300.0,
-    },
-    {
-      imgSrc: "../../src/assets/img/shop-cart/cp-2.jpg",
-      title: "Zip-pockets pebbled tote briefcase",
-      price: 170.0,
-      quantity: 1,
-      total: 170.0,
-    },
-    {
-      imgSrc: "../../src/assets/img/shop-cart/cp-3.jpg",
-      title: "Black jean",
-      price: 85.0,
-      quantity: 1,
-      total: 170.0,
-    },
-    {
-      imgSrc: "../../src/assets/img/shop-cart/cp-4.jpg",
-      title: "Cotton Shirt",
-      price: 55.0,
-      quantity: 1,
-      total: 110.0,
-    },
-  ];
+  const dispatch = useDispatch();
+  const { cart, loading } = useSelector((state) => state.cart);
+
+  if (loading || !cart) {
+    return <div>Loading...</div>;
+  }
+
+  const totalItems = cart.totalItems;
+  const totalDiscount = cart.totalDiscount.toFixed(1);
+  const totalPrice = cart.totalPrice.toFixed(1);
 
   return (
     <section className="py-16 px-40">
@@ -87,8 +76,8 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody>
-              {cartItems.map((item, index) => (
-                <CartItem key={index} {...item} />
+              {cart.items.map((item, index) => (
+                <CartItem key={index} item={item} />
               ))}
             </tbody>
           </table>
@@ -97,10 +86,7 @@ const Cart = () => {
           <a href="#" className="uppercase font-semibold py-3 px-8 bg-gray-100">
             Continue Shopping
           </a>
-          <a
-            href="#"
-            className="uppercase font-semibold py-3 px-8 bg-gray-100 flex items-center"
-          >
+          <a href="#" className="uppercase font-semibold py-3 px-8 bg-gray-100 flex items-center">
             <FaSyncAlt className="mr-2" /> Update cart
           </a>
         </div>
@@ -128,12 +114,16 @@ const Cart = () => {
               <h6 className="font-semibold uppercase mb-4">Cart total</h6>
               <ul className="mb-6">
                 <li className="flex justify-between mb-4 font-semibold">
-                  <span>Subtotal</span>
-                  <span>$750.0</span>
+                  <span>Total Items</span>
+                  <span>{totalItems}</span>
+                </li>
+                <li className="flex justify-between mb-4 font-semibold">
+                  <span>Total Discount</span>
+                  <span>${totalDiscount}</span>
                 </li>
                 <li className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>$750.0</span>
+                  <span>Total Price</span>
+                  <span>${totalPrice}</span>
                 </li>
               </ul>
               <a

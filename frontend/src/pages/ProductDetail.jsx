@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FaStar, FaHeart, FaAdjust, FaShoppingBag, FaArrowLeft, FaArrowRight, FaMinus, FaPlus } from "react-icons/fa";
+import { FaStar, FaShoppingBag, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import ProductDetailsTab from "../components/ProductDetailsTab";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { getProductById } from "../redux/actions/product";
+import { addItemToCart } from "../redux/actions/cart"; // Import the add to cart action
 
 const ProductDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
   const [availableQuantity, setAvailableQuantity] = useState(0);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const { loading, product } = useSelector(state => state.products); 
+ // const cart = useSelector(state => state.cart.cart); // Assuming you have cart state in Redux
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -30,8 +31,9 @@ const ProductDetails = () => {
 
   useEffect(() => {
     if (product && product.sizes.length > 0) {
-      setSelectedSize(product.sizes[0]);
-      setAvailableQuantity(product.sizes[0].quantity);
+      const firstAvailableSize = product.sizes.find(size => size.quantity > 0);
+      setSelectedSize(firstAvailableSize);
+      setAvailableQuantity(firstAvailableSize ? firstAvailableSize.quantity : 0);
     }
   }, [product]);
 
@@ -51,19 +53,25 @@ const ProductDetails = () => {
     );
   };
 
-  const handleQuantityChange = (amount) => {
-    setQuantity((prevQuantity) => Math.max(1, Math.min(availableQuantity, prevQuantity + amount)));
-  };
-
   const handleSizeChange = (size) => {
     setSelectedSize(size);
     setAvailableQuantity(size.quantity);
-    setQuantity(1); // Reset quantity to 1 when size changes
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedSize) {
+      // Handle case where no size is selected
+      return;
+    }
+    dispatch(addItemToCart(product._id, selectedSize.name,1)); // Dispatch action to add item to cart
   };
 
   if (loading || !product) {
     return <div>Loading...</div>; // Placeholder for loading state
   }
+
+  const availableSizes = product.sizes.filter(size => size.quantity > 0);
+  const isOutOfStock = availableSizes.length === 0;
 
   return (
     <div className="flex flex-wrap py-20 px-40 mx-auto">
@@ -129,48 +137,40 @@ const ProductDetails = () => {
         </div>
         <p className="text-gray-700 mb-8">{product.description}</p>
 
-        <div className="flex items-center mb-6">
-          <span className="mr-4">Quantity:</span>
-          <div className="flex items-center border border-gray-400 rounded-full p-2 px-2 mr-5">
-            <button
-              className="text-gray-400 text-sm rounded-full w-8 h-8 flex items-center justify-center"
-              onClick={() => handleQuantityChange(-1)}
-            >
-              <FaMinus />
-            </button>
-            <span className="mx-4 text-lg">{quantity}</span>
-            <button
-              className="text-gray-400 rounded-full text-sm w-8 h-8 flex items-center justify-center"
-              onClick={() => handleQuantityChange(1)}
-            >
-              <FaPlus />
-            </button>
+        {!isOutOfStock && (
+          <div className="mb-6 flex items-center">
+            <span className="mr-3">Select Size:</span>
+            <div className="flex items-center">
+              {availableSizes.map((size, index) => (
+                <button
+                  key={index}
+                  className={`px-4 py-2 border rounded-full mr-2 ${selectedSize === size ? "bg-red-600 text-white" : "bg-white"}`}
+                  onClick={() => handleSizeChange(size)}
+                >
+                  {size.name}
+                </button>
+              ))}
+            </div>
           </div>
-          <button className="bg-red-600 text-white rounded-full px-8 py-3 flex items-center mr-4">
+        )}
+
+        <div className="flex items-center mb-6">
+          <button 
+            className={`bg-red-600 text-white rounded-full px-8 py-3 flex items-center ${isOutOfStock ? "opacity-50 cursor-not-allowed" : ""}`} 
+            onClick={handleAddToCart} // Handle add to cart button click
+            disabled={isOutOfStock}
+          >
             <FaShoppingBag className="mr-2" /> Add to cart
           </button>
         </div>
 
-        <div className="mb-6 flex items-center">
-          <span className="mr-3">Select Size:</span>
-          <div className="flex items-center">
-            {product.sizes.map((size, index) => (
-              <button
-                key={index}
-                className={`px-4 py-2 border rounded-full mr-2 ${selectedSize === size ? "bg-red-600 text-white" : "bg-white"}`}
-                onClick={() => handleSizeChange(size)}
-              >
-                {size.name}
-              </button>
-            ))}
-          </div>
-        </div>
+        {isOutOfStock && <div className="text-red-600 font-bold">Out of Stock</div>}
 
         <div className="border-t border-gray-300 pt-6">
           <ul>
             <li className="flex items-center mb-4">
               <span className="w-1/3 font-semibold">Availability:</span>
-              <span>In Stock</span>
+              <span>{isOutOfStock ? "Out of Stock" : "In Stock"}</span>
             </li>
             <li className="flex items-center mb-4">
               <span className="w-1/3 font-semibold">Available color:</span>

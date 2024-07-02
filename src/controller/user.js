@@ -73,8 +73,9 @@ const userController = {
 
   getUser: async (req, res) => {
     try {
+      console.log(req.headers);
       const authHeader = req.headers.authorization;
-  
+
       if (!authHeader) {
         return res.status(401).send({ error: "Authorization header not found" });
       }
@@ -84,19 +85,37 @@ const userController = {
       if (!jwt) {
         return res.status(401).send({ error: "Token not found" });
       }
+
   
       const userId = await jwtProvider.getUserIdFromToken(jwt);
       const user = await User.findById(userId);
       // .populate("address");
+
+     // console.log(user);
   
       if (!user) {
         return res.status(404).send({ error: `User not found with id: ${userId}` });
       }
-  
+      console.log("exexcuteed succcck");
       return res.status(200).json({ user });
     } catch (error) {
       console.error("Error fetching user:", error);
       return res.status(500).json({ message: "Failed to get user" });
+    }
+  },
+
+  getUserById: async (userId) => {
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw error;
     }
   },
 };

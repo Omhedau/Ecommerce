@@ -50,7 +50,7 @@
 /* Add this to your CSS file */
 @keyframes dropdownAnimation {
   from {
-    transform: translateY(30px);
+    transform: translateY(20px);
     opacity: 0.5;
   }
   to {
@@ -60,6 +60,10 @@
 }
 
 .dropdown-menu {
-  animation: dropdownAnimation 0.2s ease-out;
+  animation: dropdownAnimation 0.1s ease-out;
 }
+
+
+
+
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL } from "../../config/apiConfig.js";
+import { API_BASE_URL,api } from "../../config/apiConfig";
 import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
@@ -11,8 +11,7 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
-} from "../constants/user.js";
-
+} from "../constants/user";
 
 export const register =
   (firstName, lastName, email, password) => async (dispatch) => {
@@ -26,7 +25,7 @@ export const register =
         password,
       });
 
-      const {user,jwt} = response.data;
+      const { user, jwt } = response.data;
 
       if (jwt) {
         localStorage.setItem("jwt", jwt);
@@ -44,7 +43,6 @@ export const register =
     }
   };
 
-// Login User
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
@@ -53,12 +51,15 @@ export const login = (email, password) => async (dispatch) => {
       password,
     });
 
-    const {user,jwt} = response.data;
-  
+    const { user, jwt } = response.data;
+
     if (jwt) {
       localStorage.setItem("jwt", jwt);
     }
     dispatch({ type: USER_LOGIN_SUCCESS, payload: { user, jwt } });
+
+    // After successful login, fetch user details and cart
+    dispatch(getUserDetails(jwt));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -67,31 +68,25 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
-// Logout User
 export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT, payload: null });
   localStorage.removeItem("jwt");
   localStorage.clear();
+  window.location.reload(); // Optional: Reload the page after logout
 };
 
-// Get User Details
 export const getUserDetails = (jwt) => async (dispatch) => {
-try {
+  try {
     dispatch({ type: USER_DETAILS_REQUEST });
 
-    const config = {
-    headers: {
-        Authorization: `Bearer ${jwt}`,
-    },
-    };
+    const { data } = await api().get('/user/profile');
+    const { user } = data;
 
-    const response = await axios.get(`${API_BASE_URL}/user/profile`, config);
-    const {user} = response.data;
-    dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
-} catch (error) {
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: user });
+  } catch (error) {
     dispatch({
-    type: USER_DETAILS_FAIL,
-    payload: error.message,
+      type: USER_DETAILS_FAIL,
+      payload: error.message,
     });
-}
+  }
 };
