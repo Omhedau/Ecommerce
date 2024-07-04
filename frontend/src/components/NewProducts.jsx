@@ -1,92 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaExpand, FaHeart, FaShoppingBag, FaStar } from 'react-icons/fa';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-// const products = [
-//   {
-//     id: 1,
-//     category: 'women',
-//     img: '../../src/assets/img/product/product-1.jpg',
-//     label: 'New',
-//     labelColor: 'bg-green-600',
-//     name: 'Buttons tweed blazer',
-//     price: '$59.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 2,
-//     category: 'men',
-//     img: '../../src/assets/img/product/product-2.jpg',
-//     label: '',
-//     labelColor: '',
-//     name: 'Flowy striped skirt',
-//     price: '$49.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 3,
-//     category: 'accessories',
-//     img: '../../src/assets/img/product/product-3.jpg',
-//     label: 'Out of stock',
-//     labelColor: 'bg-black',
-//     name: 'Cotton T-Shirt',
-//     price: '$59.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 4,
-//     category: 'cosmetic',
-//     img: '../../src/assets/img/product/product-4.jpg',
-//     label: '',
-//     labelColor: '',
-//     name: 'Slim striped pocket shirt',
-//     price: '$59.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 5,
-//     category: 'kid',
-//     img: '../../src/assets/img/product/product-5.jpg',
-//     label: '',
-//     labelColor: '',
-//     name: 'Fit micro corduroy shirt',
-//     price: '$59.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 6,
-//     category: 'sale',
-//     img: '../../src/assets/img/product/product-6.jpg',
-//     label: 'Sale',
-//     labelColor: 'bg-red-600',
-//     name: 'Tropical Kimono',
-//     price: '$49.0',
-//     originalPrice: '$59.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 7,
-//     category: 'women men kid accessories cosmetic',
-//     img: '../../src/assets/img/product/product-7.jpg',
-//     label: '',
-//     labelColor: '',
-//     name: 'Contrasting sunglasses',
-//     price: '$59.0',
-//     rating: 5,
-//   },
-//   {
-//     id: 8,
-//     category: 'sale',
-//     img: '../../src/assets/img/product/product-8.jpg',
-//     label: 'Sale',
-//     labelColor: 'bg-red-600',
-//     name: 'Water resistant backpack',
-//     price: '$49.0',
-//     originalPrice: '$59.0',
-//     rating: 5,
-//   },
-// ];
+import { useDispatch, useSelector } from 'react-redux';
+import { getNewProducts } from '../redux/actions/product';
 
 export const ProductItem = ({ product }) => {
   const renderImage = () => {
@@ -139,52 +55,21 @@ export const ProductItem = ({ product }) => {
   );
 };
 
-
 const NewProducts = () => {
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const { newProducts, loading, error } = useSelector((state) => state.products);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [allProducts, setAllProducts] = useState([]);
-  const [clothingProducts, setClothingProducts] = useState([]);
-  const [accessoriesProducts, setAccessoriesProducts] = useState([]);
-  const [cosmeticProducts, setCosmeticProducts] = useState([]);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get('http://localhost:5454/product');
-      const fetchedProducts = response.data;
-      setAllProducts(fetchedProducts);
-      setClothingProducts(fetchedProducts.filter(product => product.category === 'Clothing'));
-      setAccessoriesProducts(fetchedProducts.filter(product => product.category === 'Accessories'));
-      setCosmeticProducts(fetchedProducts.filter(product => product.category === 'Cosmetics'));
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setError('Failed to fetch products. Please try again later.');
-    }
-  };
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    dispatch(getNewProducts());
+  }, [dispatch]);
 
   useEffect(() => {
-    switch (selectedCategory) {
-      case 'All':
-        setFilteredProducts(allProducts);
-        break;
-      case 'Clothing':
-        setFilteredProducts(clothingProducts);
-        break;
-      case 'Accessories':
-        setFilteredProducts(accessoriesProducts);
-        break;
-      case 'Cosmetics':
-        setFilteredProducts(cosmeticProducts);
-        break;
-      default:
-        setFilteredProducts([]);
+    if (newProducts) {
+      setFilteredProducts(newProducts[selectedCategory] || []);
     }
-  }, [selectedCategory, allProducts, clothingProducts, accessoriesProducts, cosmeticProducts]);
+  }, [selectedCategory, newProducts]);
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
@@ -200,7 +85,7 @@ const NewProducts = () => {
           </div>
           <div className="w-full md:w-2/3">
             <ul className="flex flex-wrap justify-end space-x-8">
-              {['All', 'Clothing', 'Accessories', 'Cosmetics'].map(category => (
+              {['All', 'Mens', 'Womens', 'Kids'].map(category => (
                 <li
                   key={category}
                   className={`cursor-pointer text-gray-800 hover:text-red-600 ${selectedCategory === category ? 'text-red-600' : ''}`}
@@ -212,18 +97,19 @@ const NewProducts = () => {
             </ul>
           </div>
         </div>
-        {error && <div className="text-red-600 text-center mb-8">{error}</div>}
-        <div className="flex flex-wrap -mx-4">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
+        {loading ? (
+          <div className="text-center w-full">Loading...</div>
+        ) : error ? (
+          <div className="text-red-600 text-center mb-8">{error}</div>
+        ) : filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-4 -mx-4">
+            {filteredProducts.map(product => (
               <ProductItem key={product._id} product={product} />
-            ))
-          ) : (
-            <div className="text-center w-full" key="no-products">
-              No products available
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center w-full">No products available</div>
+        )}
       </div>
     </section>
   );

@@ -195,6 +195,28 @@ const productController = {
         .json({ message: "Error retrieving product", error });
     }
   },
+
+  getNewProducts: async (req, res) => {
+    try {
+      console.log("hyabefbsgngb...........");
+      const AllProducts = await Product.find().sort({ createdAt: -1 }).limit(8);
+      const MenProducts = await Product.find({ gender: 'Men' }).sort({ createdAt: -1 }).limit(4);
+      const WomenProducts = await Product.find({ gender: 'Women' }).sort({ createdAt: -1 }).limit(4);
+      const KidProducts = await Product.find({ gender: { $in: ['Boy', 'Girl'] } }).sort({ createdAt: -1 }).limit(4);
+
+      const newProducts = {
+        'All': AllProducts,
+        'Mens': MenProducts,
+        'Womens': WomenProducts,
+        'Kids': KidProducts,
+      };
+
+      res.status(200).json({ newProducts });
+    } catch (error) {
+      console.error("Error retrieving new products:", error);
+      res.status(500).json({ message: "Error retrieving new products", error });
+    }
+  },
 };
 
 export default productController;

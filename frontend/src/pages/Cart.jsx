@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { FaStar, FaSyncAlt } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import { getUserCart, updateCartItem, deleteCartItem } from "../redux/actions/cart";
+import { Link } from "react-router-dom";
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
@@ -126,12 +127,12 @@ const Cart = () => {
                   <span>${totalPrice}</span>
                 </li>
               </ul>
-              <a
-                href="#"
+              <Link 
+                to={'/checkout'}
                 className="block bg-red-500 text-white text-center py-3 rounded-full"
               >
                 Proceed to checkout
-              </a>
+              </Link>
             </div>
           </div>
         </div>

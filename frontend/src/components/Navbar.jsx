@@ -139,7 +139,7 @@ const Navbar = () => {
           {user ? (
             <div className="relative group">
               {renderUserAvatar()}
-              <div className="absolute right-0 mt-3 w-48 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 text-white border border-gray-200 rounded-md shadow-lg py-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {/* <div className="absolute right-0 mt-3 w-48 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 text-white border border-gray-200 rounded-md shadow-lg py-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="absolute right-2 top-[-8px] w-6 h-6 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 transform rotate-45"></div>
                 <Link to={'/profile'} className="block px-4 py-2 hover:bg-red-500">Your Profile</Link>
                 <button
@@ -150,7 +150,7 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
-              </div>
+              </div> */}
             </div>
           ) : (
             <button onClick={openModal} className="py-2 px-4 text-gray-700 font-semibold hover:bg-red-500 hover:text-white transition duration-300 rounded-md">Login</button>

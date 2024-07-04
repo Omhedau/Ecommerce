@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
     mobile: {
         type: String,
     },
-    address: {
+    address: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "addresses" 
-    },
+        ref: "Address" 
+    }],
     createdAt: {
         type: Date,
         default: Date.now(), // Default value is the current timestamp

@@ -1,5 +1,6 @@
 import { User } from "../models/user.js";
 import { Cart } from "../models/cart.js";
+import { Address } from "../models/address.js";
 import bcrypt from "bcrypt";
 import jwtProvider from "../config/jwtProvider.js";
 
@@ -118,6 +119,99 @@ const userController = {
       throw error;
     }
   },
+
+  getAllAddresses: async (req, res) => {
+    try {
+      
+      const userId = req.user._id; 
+  
+      const addresses = await Address.find({ user: userId });
+      console.log("getting all addresses",addresses);
+      res.json({
+        success: true,
+        addresses,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Server Error',
+        error: error.message,
+      });
+    }
+  },
+
+  createAddress: async (req, res) => {
+    try {
+      const userId = req.user._id; 
+  
+      const {
+        firstName,
+        lastName,
+        country,
+        address,
+        city,
+        state,
+        zipcode,
+        mobile,
+        email,
+      } = req.body;
+  
+      const newAddress = new Address({
+        firstName,
+        lastName,
+        country,
+        address,
+        city,
+        state,
+        zipcode,
+        mobile,
+        email,
+        user: userId,
+      });
+  
+      const savedAddress = await newAddress.save();
+  
+      // Update the user's address list
+      await User.findByIdAndUpdate(userId, {
+        $push: { address: savedAddress._id },
+      });
+  
+      res.status(201).json({
+        success: true,
+        address: savedAddress,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Server Error',
+        error: error.message,
+      });
+    }
+  },
+
+  removeAddress: async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const addressId = req.params.addressId;
+
+      // Remove the address from the Address collection
+      const deletedAddress = await Address.findByIdAndDelete(addressId);
+      if (!deletedAddress) {
+        return res.status(404).json({ message: "Address not found" });
+      }
+
+      // Remove the reference of the address from the user's address array
+      await User.findByIdAndUpdate(userId, {
+        $pull: { address: addressId },
+      });
+
+      res.status(200).json({ message: "Address removed successfully" });
+    } catch (error) {
+      console.error("Error removing address:", error);
+      res.status(500).json({ message: "Failed to remove address" });
+    }
+  },
+
 };
 
 export default userController;

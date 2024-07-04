@@ -4,7 +4,7 @@ const Hero = () => {
   return (
     <div className="container py-4 h-[638px] grid grid-cols-1 md:grid-cols-4 gap-2">
       <div
-        className="col-span-1 md:col-span-2 bg-pink-100 p-8 flex flex-col justify-between"
+        className="col-span-1 md:col-span-2 bg-pink-100 p-8 flex flex-col justify-center"
         style={{
           backgroundImage:
             'url("../../src/assets/img/categories/category-1.jpg")',

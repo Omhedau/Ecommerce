@@ -3,11 +3,12 @@ import {thunk} from 'redux-thunk';
 import { productsReducer } from './reducers/product.js';
 import { userReducer } from './reducers/user.js';
 import { cartReducer } from './reducers/cart.js';
-
+import { addressReducer } from './reducers/address.js';
 const rootReducer = combineReducers({
     products: productsReducer,
     user: userReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    address: addressReducer
 });
 
 const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
