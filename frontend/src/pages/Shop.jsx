@@ -6,6 +6,7 @@ import Dropdown from '../components/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProducts } from '../redux/actions/product';
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import Loader from '../components/Loader';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -63,6 +64,10 @@ const Shop = () => {
     };
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    if(loading){
+        return <Loader/>
+    }
 
     return (
         <>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserCart } from "../redux/actions/cart";
 import { Link } from "react-router-dom";
+import Loader from "./Loader";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const OrderSummary = () => {
   }, [dispatch]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loader/>;
   }
 
   if (error) {

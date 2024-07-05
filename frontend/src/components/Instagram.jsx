@@ -30,7 +30,7 @@ const Instagram = () => {
                   href="#"
                   className="text-base text-black font-medium mt-2 block"
                 >
-                  @ashion_shop
+                  @om_hedau
                 </a>
               </div>
             </div>

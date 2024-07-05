@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { getProductById } from "../redux/actions/product";
 import { addItemToCart } from "../redux/actions/cart"; // Import the add to cart action
+import Loader from "../components/Loader";
 
 const ProductDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -67,7 +68,7 @@ const ProductDetails = () => {
   };
 
   if (loading || !product) {
-    return <div>Loading...</div>; // Placeholder for loading state
+    return <Loader/>; // Placeholder for loading state
   }
 
   const availableSizes = product.sizes.filter(size => size.quantity > 0);

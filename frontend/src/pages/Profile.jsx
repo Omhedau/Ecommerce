@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserOrders } from '../redux/actions/order';
+import Loader from '../components/Loader';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const Profile = () => {
 
   // Handle different loading and error states
   if (loading || !orders) {
-    return <p>Loading...</p>;
+    return <Loader/>;
   }
 
   if (error) {
@@ -22,7 +23,7 @@ const Profile = () => {
 
   // When orders are loaded and not empty
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-40 py-10">
     <h2 className="text-2xl font-semibold mb-4">Your Orders</h2>
     {orders.length === 0 ? (
       <p>No orders found.</p>

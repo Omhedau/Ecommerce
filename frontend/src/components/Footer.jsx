@@ -7,10 +7,9 @@ const Footer = () => {
     <footer className="bg-white py-10 border-t px-40">
       <div className="container mx-auto flex flex-wrap justify-between items-center space-y-6 md:space-y-0">
         <div className="w-full md:w-2/6  pr-10">
-          <h2 className="font-bold text-2xl">Ashion</h2>
+          <h2 className="font-bold text-2xl">Trendy</h2>
           <p className="text-gray-500 mt-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt cilisis.
-          </p>
+          Step into Style, Embrace the Trend. <br /> Discover Fashion at Trendy. </p>
           <div className="flex mt-4 space-x-2">
             <img src="../../src/assets/img/payment/payment-1.png" alt="MasterCard" className="h-8" />
             <img src="../../src/assets/img/payment/payment-2.png" alt="Visa" className="h-8" />
@@ -53,7 +52,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="mt-10 text-center text-gray-500">
-        <p>Copyright © 2024 All rights reserved | This template is made with <span className="text-red-500">♥</span> by Colorlib</p>
+        <p>Copyright © 2024 All rights reserved | This website is made with <span className="text-red-500">♥</span> by Om Hedau</p>
       </div>
     </footer>
   );

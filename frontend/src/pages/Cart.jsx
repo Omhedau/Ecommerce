@@ -4,6 +4,7 @@ import { FaStar, FaSyncAlt } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import { getUserCart, updateCartItem, deleteCartItem } from "../redux/actions/cart";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
@@ -54,8 +55,26 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { cart, loading } = useSelector((state) => state.cart);
 
-  if (loading || !cart) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    dispatch(getUserCart());
+  }, [dispatch]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!cart || cart.items.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[500px]">
+        <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
+        <Link 
+          to="/" 
+          className="bg-blue-500 text-white py-3 px-6 rounded-full hover:bg-blue-600"
+        >
+          Go to Shopping
+        </Link>
+      </div>
+    );
   }
 
   const totalItems = cart.totalItems;
@@ -84,12 +103,15 @@ const Cart = () => {
           </table>
         </div>
         <div className="flex justify-between mb-12">
-          <a href="#" className="uppercase font-semibold py-3 px-8 bg-gray-100">
+          <Link to="/" className="uppercase font-semibold py-3 px-8 bg-gray-100">
             Continue Shopping
-          </a>
-          <a href="#" className="uppercase font-semibold py-3 px-8 bg-gray-100 flex items-center">
+          </Link>
+          <button 
+            className="uppercase font-semibold py-3 px-8 bg-gray-100 flex items-center"
+            onClick={() => dispatch(getUserCart())}
+          >
             <FaSyncAlt className="mr-2" /> Update cart
-          </a>
+          </button>
         </div>
         <div className="flex flex-wrap -mx-2">
           <div className="w-full md:w-1/2 px-2 mb-6">

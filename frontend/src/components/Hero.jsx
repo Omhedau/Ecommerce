@@ -15,10 +15,8 @@ const Hero = () => {
         <div>
           <h1 style={{ fontFamily: "Cookie" }}
            className="text-6xl font-bold mb-4">Women's fashion</h1>
-          <p className="mb-4">
-            Sit amet, consectetur adipiscing elit, sed do eiusmod tempor <br />
-            incididunt ut labore et dolore magna aliqua. Pellentesque ultrices
-            gravida.
+          <p style={{fontFamily:'Montserrat'}} className="mb-4 text-2xl">
+          Elevate Your Style with Elegance
           </p>
         </div>
         <div className="w-fit">

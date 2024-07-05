@@ -3,6 +3,7 @@ import { FaExpand, FaHeart, FaShoppingBag, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNewProducts } from '../redux/actions/product';
+import Loader from './Loader';
 
 export const ProductItem = ({ product }) => {
   const renderImage = () => {
@@ -38,12 +39,14 @@ export const ProductItem = ({ product }) => {
             </ul>
           </div>
           <div className="p-4 text-center">
-            <h6 className="text-lg font-semibold mb-2">{product.title}</h6>
-            <div className="flex justify-center mb-2">
-              {[...Array(product.rating)].map((_, index) => (
-                <FaStar key={index} className="text-yellow-500 text-xs" />
-              ))}
-            </div>
+            <h6 className="text-lg font-semibold mb-2">{product.title.length > 20 ? product.title.substring(0,20) + "...":product.title}</h6>
+            {product.rating && (
+              <div className="flex justify-center mb-2">
+                {[...Array(product.rating)].map((_, index) => (
+                  <FaStar key={index} className="text-yellow-500 text-xs" />
+                ))}
+              </div>
+            )}
             <div className="text-xl font-semibold text-gray-800">
               {product.price}
               {product.originalPrice && <span className="text-sm text-gray-500 line-through ml-2">{product.originalPrice}</span>}
@@ -98,9 +101,9 @@ const NewProducts = () => {
           </div>
         </div>
         {loading ? (
-          <div className="text-center w-full">Loading...</div>
+          <Loader/>
         ) : error ? (
-          <div className="text-red-600 text-center mb-8">{error}</div>
+          <div className="text-red-600 text-center mb-8">{"failed to load products"}</div>
         ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-4 -mx-4">
             {filteredProducts.map(product => (
