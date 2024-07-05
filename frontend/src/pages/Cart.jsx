@@ -128,7 +128,7 @@ const Cart = () => {
                 </li>
               </ul>
               <Link 
-                to={'/checkout'}
+                to={'/checkout/address'}
                 className="block bg-red-500 text-white text-center py-3 rounded-full"
               >
                 Proceed to checkout

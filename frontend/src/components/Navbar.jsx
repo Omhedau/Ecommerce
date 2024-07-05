@@ -52,6 +52,7 @@ const categoryData = [
 const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isAvatarHovered, setIsAvatarHovered] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const cart = useSelector((state) => state.cart.cart);
@@ -60,6 +61,7 @@ const Navbar = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
+  
   const handleMouseEnter = (gender) => {
     setActiveMenu(gender);
   };
@@ -137,20 +139,27 @@ const Navbar = () => {
         </div>
         <div className="flex items-center space-x-4">
           {user ? (
-            <div className="relative group">
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsAvatarHovered(true)}
+              onMouseLeave={() => setIsAvatarHovered(false)}
+            >
               {renderUserAvatar()}
-              {/* <div className="absolute right-0 mt-3 w-48 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 text-white border border-gray-200 rounded-md shadow-lg py-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute right-2 top-[-8px] w-6 h-6 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 transform rotate-45"></div>
-                <Link to={'/profile'} className="block px-4 py-2 hover:bg-red-500">Your Profile</Link>
-                <button
-                  className="w-full text-left px-4 py-2 hover:bg-red-500"
-                  onClick={() => {
-                    dispatch(logout());
-                  }}
-                >
-                  Logout
-                </button>
-              </div> */}
+              {isAvatarHovered && (
+                <div className="absolute right-0 mt-3 w-48 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 text-white border border-gray-200 rounded-md shadow-lg py-1 z-20 opacity-100 transition-opacity duration-300">
+                  <div className="absolute right-2 top-[-8px] w-6 h-6 bg-gradient-to-r from-red-500 via-pink-500 to-red-500 transform rotate-45"></div>
+                  <div className='absolute right-0 top-[-12px] w-full h-6'></div>
+                  <Link to={'/profile'} className="block px-4 py-2 hover:bg-red-500">Your Profile</Link>
+                  <button
+                    className="w-full text-left px-4 py-2 hover:bg-red-500"
+                    onClick={() => {
+                      dispatch(logout());
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <button onClick={openModal} className="py-2 px-4 text-gray-700 font-semibold hover:bg-red-500 hover:text-white transition duration-300 rounded-md">Login</button>

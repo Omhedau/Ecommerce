@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import productRouter from './routes/product.js';
 import userRouter from './routes/user.js';
 import cartRouter from "./routes/cart.js";
+import orderRouter from "./routes/order.js"
 
 // Load environment variables
 dotenv.config();
@@ -26,5 +27,6 @@ app.get("/", (req, res) => {
 app.use("/product", productRouter);
 app.use("/user",userRouter);
 app.use("/cart",cartRouter);
+app.use('/order',orderRouter);
 
 export { app };
