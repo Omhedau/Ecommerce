@@ -65,8 +65,8 @@ const Shop = () => {
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
-    if(loading){
-        return <Loader/>
+    if(!products){
+        return <Loader/>;
     }
 
     return (
