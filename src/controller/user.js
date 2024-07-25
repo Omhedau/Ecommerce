@@ -29,9 +29,14 @@ const userController = {
       // Save the new user to the database
       await newUser.save();
   
+      // Log the newUser._id to ensure it's generated
+      console.log("New User ID:", newUser._id);
+  
       // Create a new cart for the user
-      const newCart = new Cart({ userId: newUser._id });
+      const newCart = new Cart({ user: newUser._id });
       await newCart.save();
+  
+      console.log("Cart created successfully for user:", newUser._id);
   
       // Generate JWT token
       const jwt = jwtProvider.generateToken(newUser._id);
@@ -43,6 +48,7 @@ const userController = {
       res.status(500).json({ message: "Failed to create user" });
     }
   },
+  
 
   loginUser: async (req, res) => {
     try {

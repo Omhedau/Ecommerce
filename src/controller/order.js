@@ -1,6 +1,7 @@
 import { Order } from "../models/order.js";
 import { OrderItem } from "../models/orderItem.js";
 import { Cart } from "../models/cart.js";
+import { CartItem } from "../models/cartItem.js";
 
 
 const orderController = {
@@ -8,10 +9,10 @@ const orderController = {
     try {
       // Get user from req.user
       const user = req.user._id;
-
+  
       // Extract shipping address and payment details from req.body
       const { shippingAddress, paymentDetails } = req.body;
-
+  
       // Find the user's cart
       const cart = await Cart.findOne({ user }).populate({
         path: 'items',
@@ -20,11 +21,11 @@ const orderController = {
           model: 'Product'
         }
       });
-
+  
       if (!cart || cart.items.length === 0) {
         return res.status(400).json({ success: false, message: "Cart is empty" });
       }
-
+  
       // Create order items from cart items
       const orderItemIds = await Promise.all(
         cart.items.map(async (cartItem) => {
@@ -35,7 +36,7 @@ const orderController = {
           return orderItem._id;
         })
       );
-
+  
       // Create new order using cart's totalPrice, totalDiscount, and totalItems
       const newOrder = new Order({
         user,
@@ -46,17 +47,21 @@ const orderController = {
         totalDiscount: cart.totalDiscount,
         totalItems: cart.totalItems,
       });
-
+  
       // Save order to database
       await newOrder.save();
-
+  
       // Clear the user's cart
+      const cartItemIds = cart.items.map(item => item._id);
       cart.items = [];
       cart.totalPrice = 0;
       cart.totalDiscount = 0;
       cart.totalItems = 0;
       await cart.save();
-
+  
+      // Delete the cart items from the CartItem collection
+      await CartItem.deleteMany({ _id: { $in: cartItemIds } });
+  
       // Send response
       res.status(201).json({ success: true, order: newOrder });
     } catch (error) {
@@ -64,6 +69,7 @@ const orderController = {
       res.status(500).json({ success: false, message: "Failed to create order" });
     }
   },
+
 
   getUserOrders: async (req, res) => {
     try {
