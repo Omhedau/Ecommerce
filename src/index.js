@@ -4,8 +4,10 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import productRouter from './routes/product.js';
 import userRouter from './routes/user.js';
-import cartRouter from "./routes/cart.js";
-import orderRouter from "./routes/order.js"
+import cartRouter from './routes/cart.js';
+import orderRouter from './routes/order.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
@@ -16,17 +18,23 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
-// Welcome route
-app.get("/", (req, res) => {
-    return res.status(200).send({ message: "welcome to ecommerce api", status: true });
-});
+// Resolve __dirname equivalent
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Use product routes
-app.use("/product", productRouter);
-app.use("/user",userRouter);
-app.use("/cart",cartRouter);
-app.use('/order',orderRouter);
+app.use('/product', productRouter);
+app.use('/user', userRouter);
+app.use('/cart', cartRouter);
+app.use('/order', orderRouter);
+
+// Serve static files
+app.use(express.static(path.resolve(__dirname, '../frontend/build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+});
 
 export { app };
