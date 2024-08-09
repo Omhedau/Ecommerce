@@ -11,11 +11,11 @@ const Footer = () => {
             Discover the latest in fashion with Trendy. <br /> Explore our collection and follow us on social media for updates.
           </p>
           <div className="flex mt-4 space-x-2">
-            <img src="../../src/assets/img/payment/payment-1.png" alt="MasterCard" className="h-8" />
-            <img src="../../src/assets/img/payment/payment-2.png" alt="Visa" className="h-8" />
-            <img src="../../src/assets/img/payment/payment-3.png" alt="Discover" className="h-8" />
-            <img src="../../src/assets/img/payment/payment-4.png" alt="PayPal" className="h-8" />
-            <img src="../../src/assets/img/payment/payment-5.png" alt="Cirrus" className="h-8" />
+            <img src="https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222534/payment-1_u0lvft.png" alt="MasterCard" className="h-8" />
+            <img src="https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222534/payment-2_fxm947.png" alt="Visa" className="h-8" />
+            <img src="https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222534/payment-3_uzsvif.png" alt="Discover" className="h-8" />
+            <img src="https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222534/payment-4_jdgoaj.png" alt="PayPal" className="h-8" />
+            <img src="https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222534/payment-5_l5naky.png" alt="Cirrus" className="h-8" />
           </div>
         </div>
         <div className="w-full md:w-1/6 pr-10">

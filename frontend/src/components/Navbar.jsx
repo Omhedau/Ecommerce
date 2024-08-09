@@ -98,7 +98,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-lg relative">
       <div className="container mx-auto px-20 py-6 flex items-center justify-between">
         <div className="flex items-center space-x-8">
-          <img src="../../src/assets/Logo2.jpg" alt="Logo" className="h-12 mr-32 mt-2" />
+          <img src="https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222228/logo2_qj073p.jpg" alt="Logo" className="h-12 mr-32 mt-2" />
           <Link to={'/'} className='py-2 px-4 font-semibold'>
             Home
           </Link>

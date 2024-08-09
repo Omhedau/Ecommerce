@@ -3,12 +3,12 @@ import { FaInstagram } from 'react-icons/fa';
 
 const Instagram = () => {
   const images = [
-    "../../src/assets/img/instagram/insta-1.jpg",
-    "../../src/assets/img/instagram/insta-2.jpg",
-    "../../src/assets/img/instagram/insta-3.jpg",
-    "../../src/assets/img/instagram/insta-4.jpg",
-    "../../src/assets/img/instagram/insta-5.jpg",
-    "../../src/assets/img/instagram/insta-6.jpg",
+    "https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222319/insta-1_jvglmp.jpg",
+    "https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222319/insta-2_tm657c.jpg",
+    "https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222319/insta-3_wdllzx.jpg",
+    "https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222319/insta-4_nainbv.jpg",
+    "https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222320/insta-5_lhqzry.jpg",
+    "https://res.cloudinary.com/dsme0ihpk/image/upload/v1723222320/insta-6_izlawp.jpg",
   ];
 
   return (

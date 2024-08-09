@@ -7,7 +7,7 @@ const Hero = () => {
         className="col-span-1 md:col-span-2 bg-pink-100 p-8 flex flex-col justify-center"
         style={{
           backgroundImage:
-            'url("../../src/assets/img/categories/category-1.jpg")',
+            'url("https://res.cloudinary.com/dsme0ihpk/image/upload/v1723221914/category-1_mwb4pu.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -30,7 +30,7 @@ const Hero = () => {
             <div className="bg-green-100 flex"
             style={{
               backgroundImage:
-                'url("../../src/assets/img/categories/category-2.jpg")',
+                'url("https://res.cloudinary.com/dsme0ihpk/image/upload/v1723221914/category-2_mok3en.jpg")',
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -52,7 +52,7 @@ const Hero = () => {
             <div className="bg-blue-100 flex"
             style={{
               backgroundImage:
-                'url("../../src/assets/img/categories/category-3.jpg")',
+                'url("https://res.cloudinary.com/dsme0ihpk/image/upload/v1723221914/category-3_qxquwk.jpg")',
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -74,7 +74,7 @@ const Hero = () => {
             <div className="bg-pink-100 flex"
             style={{
               backgroundImage:
-                'url("../../src/assets/img/categories/category-4.jpg")',
+                'url("https://res.cloudinary.com/dsme0ihpk/image/upload/v1723221914/category-4_tjxdri.jpg")',
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -96,7 +96,7 @@ const Hero = () => {
             <div className="bg-blue-100 flex"
             style={{
               backgroundImage:
-                'url("../../src/assets/img/categories/category-5.jpg")',
+                'url("https://res.cloudinary.com/dsme0ihpk/image/upload/v1723221914/category-5_iz2ise.jpg")',
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
