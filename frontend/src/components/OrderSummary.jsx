@@ -77,7 +77,7 @@ const OrderSummary = () => {
                       <p className="text-sm text-gray-600">{`Quantity: ${item.quantity}`}</p>
                     </div>
                   </div>
-                  <p className="text-sm font-medium">{`$${(
+                  <p className="text-sm font-medium">{`₹${(
                     item.product.price * item.quantity
                   ).toFixed(2)}`}</p>
                 </div>
@@ -93,10 +93,10 @@ const OrderSummary = () => {
           <p className="text-sm font-medium">
             Total Items: {cart?.totalItems || 0}
           </p>
-          <p className="text-sm font-medium">{`Total Price: $${
+          <p className="text-sm font-medium">{`Total Price: ₹${
             cart?.totalPrice.toFixed(2) || 0
           }`}</p>
-          <p className="text-sm font-medium">{`Total Discount: $${
+          <p className="text-sm font-medium">{`Total Discount: ₹${
             cart?.totalDiscount.toFixed(2) || 0
           }`}</p>
         </div>

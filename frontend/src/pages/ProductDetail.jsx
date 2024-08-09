@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FaStar, FaShoppingBag, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import {
+  FaStar,
+  FaShoppingBag,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import ProductDetailsTab from "../components/ProductDetailsTab";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { getProductById } from "../redux/actions/product";
 import { addItemToCart } from "../redux/actions/cart"; // Import the add to cart action
 import Loader from "../components/Loader";
@@ -14,9 +19,9 @@ const ProductDetails = () => {
   const [availableQuantity, setAvailableQuantity] = useState(0);
   const { id } = useParams();
   const dispatch = useDispatch();
-
-  const { loading, product } = useSelector(state => state.products); 
- // const cart = useSelector(state => state.cart.cart); // Assuming you have cart state in Redux
+  const user = useSelector((state) => state.user.user);
+  const { loading, product } = useSelector((state) => state.products);
+  // const cart = useSelector(state => state.cart.cart); // Assuming you have cart state in Redux
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -32,9 +37,13 @@ const ProductDetails = () => {
 
   useEffect(() => {
     if (product && product.sizes.length > 0) {
-      const firstAvailableSize = product.sizes.find(size => size.quantity > 0);
+      const firstAvailableSize = product.sizes.find(
+        (size) => size.quantity > 0
+      );
       setSelectedSize(firstAvailableSize);
-      setAvailableQuantity(firstAvailableSize ? firstAvailableSize.quantity : 0);
+      setAvailableQuantity(
+        firstAvailableSize ? firstAvailableSize.quantity : 0
+      );
     }
   }, [product]);
 
@@ -60,18 +69,24 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      // Handle case where no size is selected
+    if (!user) {
+      alert("You need to be logged in to add items to the cart.");
       return;
     }
-    dispatch(addItemToCart(product._id, selectedSize.name,1)); // Dispatch action to add item to cart
+
+    if (!selectedSize) {
+      alert("Please select a size before adding to cart.");
+      return;
+    }
+
+    dispatch(addItemToCart(product._id, selectedSize.name, 1)); // Dispatch action to add item to cart
   };
 
   if (loading || !product) {
-    return <Loader/>; // Placeholder for loading state
+    return <Loader />; // Placeholder for loading state
   }
 
-  const availableSizes = product.sizes.filter(size => size.quantity > 0);
+  const availableSizes = product.sizes.filter((size) => size.quantity > 0);
   const isOutOfStock = availableSizes.length === 0;
 
   return (
@@ -84,7 +99,11 @@ const ProductDetails = () => {
               key={index}
               src={image.url}
               alt={`Product Thumbnail ${index + 1}`}
-              className={`cursor-pointer border ${index === currentImageIndex ? "border-red-600" : "border-gray-300"} rounded`}
+              className={`cursor-pointer border ${
+                index === currentImageIndex
+                  ? "border-red-600"
+                  : "border-gray-300"
+              } rounded`}
               onClick={() => handleThumbnailClick(index)}
               style={{ width: "100px", height: "100px", objectFit: "cover" }}
             />
@@ -95,7 +114,12 @@ const ProductDetails = () => {
             src={product.imageUrl[currentImageIndex].url}
             alt={`Product Image ${currentImageIndex + 1}`}
             className="rounded carousel-image"
-            style={{ width: "100%", maxHeight: "550px", objectFit: "cover", objectPosition: "top" }}
+            style={{
+              width: "100%",
+              maxHeight: "550px",
+              objectFit: "cover",
+              objectPosition: "top",
+            }}
           />
           <button
             className="absolute top-1/2 transform -translate-y-1/2 left-5 bg-gray-300 rounded-full p-2"
@@ -129,7 +153,7 @@ const ProductDetails = () => {
           </span>
         </div>
         <div className="text-3xl font-bold text-red-600 mb-10">
-        ₹{product.discountedPrice}
+          ₹{product.discountedPrice}
           {product.price && (
             <span className="text-lg text-gray-500 line-through ml-2">
               ₹{product.price}
@@ -145,7 +169,9 @@ const ProductDetails = () => {
               {availableSizes.map((size, index) => (
                 <button
                   key={index}
-                  className={`px-4 py-2 border rounded-full mr-2 ${selectedSize === size ? "bg-red-600 text-white" : "bg-white"}`}
+                  className={`px-4 py-2 border rounded-full mr-2 ${
+                    selectedSize === size ? "bg-red-600 text-white" : "bg-white"
+                  }`}
                   onClick={() => handleSizeChange(size)}
                 >
                   {size.name}
@@ -156,8 +182,10 @@ const ProductDetails = () => {
         )}
 
         <div className="flex items-center mb-6">
-          <button 
-            className={`bg-red-600 text-white rounded-full px-8 py-3 flex items-center ${isOutOfStock ? "opacity-50 cursor-not-allowed" : ""}`} 
+          <button
+            className={`bg-red-600 text-white rounded-full px-8 py-3 flex items-center ${
+              isOutOfStock ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={handleAddToCart} // Handle add to cart button click
             disabled={isOutOfStock}
           >
@@ -165,7 +193,9 @@ const ProductDetails = () => {
           </button>
         </div>
 
-        {isOutOfStock && <div className="text-red-600 font-bold">Out of Stock</div>}
+        {isOutOfStock && (
+          <div className="text-red-600 font-bold">Out of Stock</div>
+        )}
 
         <div className="border-t border-gray-300 pt-6">
           <ul>
@@ -199,7 +229,7 @@ const ProductDetails = () => {
           </ul>
         </div>
       </div>
-      <ProductDetailsTab />
+      {/* <ProductDetailsTab /> */}
     </div>
   );
 };

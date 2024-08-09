@@ -72,7 +72,8 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT, payload: null });
   localStorage.removeItem("jwt");
   localStorage.clear();
-  window.location.reload(); // Optional: Reload the page after logout
+  sessionStorage.clear();
+  window.location.replace("/"); // Optional: Reload the page after logout to home page
 };
 
 export const getUserDetails = (jwt) => async (dispatch) => {

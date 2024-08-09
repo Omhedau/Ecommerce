@@ -19,6 +19,9 @@ const initialState = {
     Womens: [],
     Kids: [],
   },
+  totalProducts: 0,
+  totalPages: 0,
+  currentPage: 1,
   loading: false,
   error: null,
 };
@@ -59,11 +62,29 @@ export const productsReducer = (state = initialState, action) => {
       };
 
     case GET_ALL_PRODUCTS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        products: [], // Ensure products array is cleared on failure
+        totalProducts: 0,
+        totalPages: 0,
+        currentPage: 1,
+        error: action.payload,
+      };
+
     case GET_PRODUCT_BY_ID_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        product: null, 
+        error: action.payload,
+      };
+
     case GET_NEW_PRODUCTS_FAILURE:
       return {
         ...state,
         loading: false,
+        newProducts: initialState.newProducts, 
         error: action.payload,
       };
 

@@ -40,7 +40,7 @@ const productController = {
       if (!subCategory) {
         return res.status(404).json({ message: "Subcategory not found" });
       }
-
+      console.log("reaching up here....");
       // Build the query
       const query = { gender, category: subCategory._id };
 

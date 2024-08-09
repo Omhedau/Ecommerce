@@ -48,7 +48,7 @@ export const ProductItem = ({ product }) => {
               </div>
             )}
             <div className="text-xl font-semibold text-gray-800">
-              {product.price}
+            ₹{product.price}
               {product.originalPrice && <span className="text-sm text-gray-500 line-through ml-2">{product.originalPrice}</span>}
             </div>
           </div>

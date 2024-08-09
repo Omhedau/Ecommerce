@@ -38,7 +38,7 @@ const Hero = () => {
                 <div className="p-8">
                     <div>
                         <h2 className="text-2xl font-bold mb-2">Men's fashion</h2>
-                        <p className="mb-2">358 items</p>
+                        {/* <p className="mb-2">358 items</p> */}
                         <div className="w-fit">
                             <a href="#" className="text-black font-semibold">
                                 SHOP NOW
@@ -60,7 +60,7 @@ const Hero = () => {
                 <div className="p-8">
                     <div>
                         <h2 className="text-2xl font-bold mb-2">Kid's fashion</h2>
-                        <p className="mb-2">273 items</p>
+                        {/* <p className="mb-2">273 items</p> */}
                         <div className="w-fit">
                             <a href="#" className="text-black font-semibold">
                                 SHOP NOW
@@ -82,7 +82,7 @@ const Hero = () => {
                 <div className="p-8">
                     <div>
                         <h2 className="text-2xl font-bold mb-2">Cosmetics</h2>
-                        <p className="mb-2">159 items</p>
+                        {/* <p className="mb-2">159 items</p> */}
                         <div className="w-fit">
                             <a href="#" className="text-black font-semibold">
                                 SHOP NOW
@@ -104,7 +104,7 @@ const Hero = () => {
                 <div className="p-8">
                     <div>
                         <h2 className="text-2xl font-bold mb-2">Accessories</h2>
-                        <p className="mb-2">792 items</p>
+                        {/* <p className="mb-2">792 items</p> */}
                         <div className="w-fit">
                             <a href="#" className="text-black font-semibold">
                                 SHOP NOW

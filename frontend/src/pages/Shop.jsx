@@ -19,7 +19,7 @@ const Shop = () => {
     const navigate = useNavigate();
 
     const { products, totalPages, loading } = useSelector(state => state.products);
-
+   
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const page = searchParams.get("page");

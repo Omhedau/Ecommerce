@@ -7,6 +7,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((state) => state.order);
 
+
   useEffect(() => {
     console.log("getting orders...");
     dispatch(getUserOrders());

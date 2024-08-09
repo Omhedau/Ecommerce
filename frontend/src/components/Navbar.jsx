@@ -123,7 +123,7 @@ const Navbar = () => {
                         <ul>
                           {cat.subCategories.map((subCat) => (
                             <Link to={`/shop/${category.gender}/${cat.name}/${subCat}`} key={subCat}>
-                              <li className="text-sm text-gray-600 hover:text-gray-800 mt-1">
+                              <li className="text-sm text-gray-600 hover:text-red-600 mt-1">
                                 {subCat}
                               </li>
                             </Link>

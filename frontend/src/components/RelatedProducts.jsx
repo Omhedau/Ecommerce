@@ -5,7 +5,7 @@ const products = [
     {
         id: 1,
         category: 'women',
-        img: '../../src/assets/img/product/product-1.jpg',
+        img: '../../src/assets/img/product/product-1.jpg', //deleting this imgages so handle accordingly....
         label: 'New',
         labelColor: 'bg-green-600',
         name: 'Buttons tweed blazer',

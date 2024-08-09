@@ -1,15 +1,15 @@
-// Footer.js
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaPinterestP } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="bg-white py-10 border-t px-40">
-      <div className="container mx-auto flex flex-wrap justify-between items-center space-y-6 md:space-y-0">
-        <div className="w-full md:w-2/6  pr-10">
+    <footer className="bg-white py-10 border-t px-10 md:px-40">
+      <div className="container mx-auto flex flex-wrap justify-between items-start space-y-6 md:space-y-0">
+        <div className="w-full md:w-2/6 pr-10">
           <h2 className="font-bold text-2xl">Trendy</h2>
           <p className="text-gray-500 mt-4">
-          Step into Style, Embrace the Trend. <br /> Discover Fashion at Trendy. </p>
+            Discover the latest in fashion with Trendy. <br /> Explore our collection and follow us on social media for updates.
+          </p>
           <div className="flex mt-4 space-x-2">
             <img src="../../src/assets/img/payment/payment-1.png" alt="MasterCard" className="h-8" />
             <img src="../../src/assets/img/payment/payment-2.png" alt="Visa" className="h-8" />
@@ -27,7 +27,7 @@ const Footer = () => {
             <li><a href="#">FAQ</a></li>
           </ul>
         </div>
-        <div className="w-full md:w-1/6  pr-10">
+        <div className="w-full md:w-1/6 pr-10">
           <h2 className="font-bold text-xl">ACCOUNT</h2>
           <ul className="mt-4 text-gray-500 space-y-2">
             <li><a href="#">My Account</a></li>
@@ -36,12 +36,11 @@ const Footer = () => {
             <li><a href="#">Wishlist</a></li>
           </ul>
         </div>
-        <div className="w-full md:w-2/6 ">
-          <h2 className="font-bold text-xl">NEWSLETTER</h2>
-          <form className="mt-4 flex flex-col space-y-2">
-            <input type="email" placeholder="Email" className="px-4 py-2 w-full rounded-full border border-gray-300" />
-            <button type="submit" className="px-6 py-2 bg-red-600 text-white rounded-full">SUBSCRIBE</button>
-          </form>
+        <div className="w-full md:w-2/6">
+          <h2 className="font-bold text-xl">FOLLOW US</h2>
+          <p className="text-gray-500 mt-4">
+            Stay connected for the latest trends and updates.
+          </p>
           <div className="flex mt-4 space-x-4 text-gray-500">
             <a href="#" className="text-xl"><FaFacebookF /></a>
             <a href="#" className="text-xl"><FaTwitter /></a>

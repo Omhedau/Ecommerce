@@ -8,7 +8,7 @@ import Loader from "../components/Loader";
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
-
+ 
   const handleQuantityChange = (quantity) => {
     if (quantity < 1) return; // Prevent reducing quantity below 1
     dispatch(updateCartItem(item._id, quantity));
@@ -53,11 +53,14 @@ const CartItem = ({ item }) => {
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
   const { cart, loading } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(getUserCart());
-  }, [dispatch]);
+    if(jwt){
+      dispatch(getUserCart());
+    }
+  }, [jwt, dispatch]);
 
   if (loading) {
     return <Loader />;
@@ -110,13 +113,13 @@ const Cart = () => {
             className="uppercase font-semibold py-3 px-8 bg-gray-100 flex items-center"
             onClick={() => dispatch(getUserCart())}
           >
-            <FaSyncAlt className="mr-2" /> Update cart
+            <FaSyncAlt className="mr-2" /> reload cart
           </button>
         </div>
         <div className="flex flex-wrap -mx-2">
           <div className="w-full md:w-1/2 px-2 mb-6">
             <div className="border p-6">
-              <h6 className="font-semibold uppercase mb-4">Discount codes</h6>
+              {/* <h6 className="font-semibold uppercase mb-4">Discount codes</h6>
               <form className="flex">
                 <input
                   type="text"
@@ -129,7 +132,7 @@ const Cart = () => {
                 >
                   Apply
                 </button>
-              </form>
+              </form> */}
             </div>
           </div>
           <div className="w-full md:w-1/2 px-2 mb-6">
@@ -142,11 +145,11 @@ const Cart = () => {
                 </li>
                 <li className="flex justify-between mb-4 font-semibold">
                   <span>Total Discount</span>
-                  <span>${totalDiscount}</span>
+                  <span>₹{totalDiscount}</span>
                 </li>
                 <li className="flex justify-between font-semibold">
                   <span>Total Price</span>
-                  <span>${totalPrice}</span>
+                  <span>₹{totalPrice}</span>
                 </li>
               </ul>
               <Link 
