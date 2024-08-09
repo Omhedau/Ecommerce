@@ -13,7 +13,7 @@ import OrderSuccess from "./components/OrderSuccess";
 import OrderFail from "./components/OrderFail";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useEffect } from "react";
+
 
 function App() {
  
