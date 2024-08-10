@@ -220,7 +220,9 @@ const userController = {
 
   testingVercel : async(req, res) =>{
     try {
-      res.status(200).json({ message: "backen works fine ....." });
+      console.log("here i am trying to get the mongodb.....");
+      const user = await User.findOne({});
+      res.status(200).json({ message: "backen works fine ....." , user});
     } catch (error) {
       res.state(500).json({error});
     }
