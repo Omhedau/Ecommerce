@@ -3,7 +3,7 @@ dotenv.config();
 
 import mongoose from 'mongoose';
 
-const mongodbUrl = process.env.MONGODB_URL;
+const mongodbUrl = process.env.MONGO_URI;
 
 const connectDb = () => {
     console.log("i am here");
