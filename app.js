@@ -1,3 +1,4 @@
+import { connectDb } from './config/db.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -31,10 +32,16 @@ app.use('/cart', cartRouter);
 app.use('/order', orderRouter);
 
 // Serve static files
-app.use(express.static(path.resolve(__dirname, '../frontend/build')));
+app.use(express.static(path.resolve(__dirname, './frontend/build')));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, './frontend/build', 'index.html'));
 });
 
-export { app };
+const PORT = 5454;
+
+
+app.listen(PORT, async () => {
+  await connectDb();
+  console.log("listening on the port ", PORT);
+});
