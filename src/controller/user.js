@@ -218,6 +218,15 @@ const userController = {
     }
   },
 
+  testingVercel : async(req, res) =>{
+    try {
+      res.status(200).json({ message: "backen works fine ....." });
+    } catch (error) {
+      res.state(500).json({error});
+    }
+  }
+
 };
+
 
 export default userController;

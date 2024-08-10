@@ -9,6 +9,7 @@ router.get("/profile",userController.getUser);
 router.get('/addresses',authenticate,userController.getAllAddresses);
 router.post('/address',authenticate,userController.createAddress);
 router.delete('/address/:addressId',authenticate,userController.removeAddress);
+router.get("/test",userController.testingVercel);
 
 
 export default router;

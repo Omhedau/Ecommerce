@@ -203,7 +203,7 @@ const productController = {
       const MenProducts = await Product.find({ gender: 'Men' }).sort({ createdAt: -1 }).limit(4);
       const WomenProducts = await Product.find({ gender: 'Women' }).sort({ createdAt: -1 }).limit(4);
       const KidProducts = await Product.find({ gender: { $in: ['Boy', 'Girl'] } }).sort({ createdAt: -1 }).limit(4);
-
+      console.log("om time out here......");
       const newProducts = {
         'All': AllProducts,
         'Mens': MenProducts,
